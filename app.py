@@ -18,20 +18,36 @@ import sqlite3
 import random
 
 
+
 #This is the start up function that runs when the app is ran in the command line to start
 def startup():
     #Connects to the database
-    inital-connection = sqlite3.connect('task-management.db')
+    initial_connection = sqlite3.connect('task-management.db')
     #Sets a cursor to each database
-    manage_cursor =  inital-connection.cursor()
+    manage_cursor =  initial_connection.cursor()
     #Runs a query to create a table if it does not exist
     #The data parameters that the tables can handle are a text username and a text password, etc
     #PRIMARY KEY automatically adds the UNIQUE constraint!
     manage_cursor.execute("CREATE TABLE IF NOT EXISTS users(User_ID INTEGER PRIMARY KEY, Username text NOT NULL, Password text NOT NULL, PhoneNumber INTEGER NOT NULL, Gender text NOT NULL, Address text NOT NULL, Age INTEGER NOT NULL, DateAccountCreated text NOT NULL)")
-    manage_cursor.execute("CREATE TABLE IF NOT EXISTS evaluations(Task_ID INTEGER PRIMARY KEY, TaskName text NOT NULL, TaskDesc text NOT NULL, Importance INTEGER NOT NULL, Urgency INTEGER NOT NULL, TaskDeadline text NOT NULL, DateTaskCreated text NOT NULL, User_ID INTEGER NOT NULL, Username text NOT NULL, FOREIGN KEY(User_ID) REFERENCES users(User_ID), FOREIGN KEY(Username) REFERENCES users(Username))")
+    manage_cursor.execute("CREATE TABLE IF NOT EXISTS tasks(Task_ID INTEGER PRIMARY KEY, TaskName text NOT NULL, TaskDesc text NOT NULL, Importance INTEGER NOT NULL, Urgency INTEGER NOT NULL, TaskDeadline text NOT NULL, DateTaskCreated text NOT NULL, User_ID INTEGER NOT NULL, Username text NOT NULL, FOREIGN KEY(User_ID) REFERENCES users(User_ID), FOREIGN KEY(Username) REFERENCES users(Username))")
 
     #Then the changes are added to the database
-    inital-connection.commit()
+    initial_connection.commit()
+
+#End of Startup function
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #This is the function call

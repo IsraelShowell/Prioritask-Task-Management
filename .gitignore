@@ -1,2 +1,4 @@
 "venv/" 
 venv/
+"task-management.db"
+task-management.db
