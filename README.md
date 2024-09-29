@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Inventory Management - Login Backend
-# Version: 0.01
+# Version: 0.20
 
 # Description:
 This repository is for our senior design project from UMES, given to us in the Fall of 2024.
@@ -25,13 +25,16 @@ In order to run this program follow the steps below;
 - Run: flask app.py
 
 # Version History:
-# V-0.01: (9-27-24)
+# V-0.10: (9-27-24)
 Initial Version <br>
 Uploaded to Github <br>
 
+# Version History:
+# V-0.20: (9-29-24)
+Added in app routes and templates <br>
+Users can make an account, login, and reset their password <br>
 
-
-# Current Features as of V-0.01:
+# Current Features as of V-0.20:
 - Version 0.01 is an internal development version, the official release version will be 1.00!
 
 # Future Features to Implement:
