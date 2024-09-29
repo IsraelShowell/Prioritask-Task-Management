@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup Form</title>
+    <title>Prioitask Signup</title>
 
 	<!--Looks for the url of a css file that I will add in the future-->
 	<link rel="stylesheet" type=text/css href="{{url_for('static',filename='custom.css')}}">
@@ -37,7 +37,7 @@ and includes inputs for email, username, password, phone number, gender, address
    <div{{message}}</div>
    {%endfor%}
 
-   <form action="{{ url_for('registrationForm') }}" method='post'>
+   <form action="{{ url_for('signup') }}" method='post'>
 
 		{{form.hidden_tag() }}
 

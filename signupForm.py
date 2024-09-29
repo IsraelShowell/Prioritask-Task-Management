@@ -15,7 +15,7 @@ The programming for this project was begun September 27th 2024 and was finished 
 #These are the imported libaries I am using to make the program
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField,IntegerField,TextAreaField,SubmitField
-from wtforms.validators import ValidationError, DataRequired
+from wtforms.validators import DataRequired
 
 #Here, I create a form format that will be rendered by app.py and by the HTML page
 class signUpForm(FlaskForm):

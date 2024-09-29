@@ -21,7 +21,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PingPong Tournament Login</title>
+    <title>Prioitask Login</title>
 	<!--Looks for the url of a css file that I will add in the future-->
     <link rel="stylesheet" type=text/css href="{{url_for('static',filename='custom.css')}}">
 
@@ -34,16 +34,18 @@
 <body>
 <center>
   <section class="login-section">
-	<h1>Welcome to the PingPong Tournament Login Page!</h1>
+	<h1>Welcome to the Prioitask Login Page!</h1>
 	<form class="login-form" action="{{ url_for('login') }}" method="POST">
 		<p>Username:<input type="text" name="Username"/></p>
 		<p>Password:<input type="text" name="Password"/></p>
 		<p><input type="submit" name="enter"/></p>
 	</form>
-	<!--Looks for the Home function in the app.py script-->
-	<p><a href="{{ url_for('Home') }}"><strong>Home</strong></a></p>
-	<!--Looks for the registrationForm function in the app.py script-->
-	<p><a href="{{ url_for('registrationForm') }}"><strong>Register</strong></a></p>
+	<!--Looks for the Reset Password function in the app.py script-->
+	<p><a href="{{ url_for('reset_password') }}"><strong>Reset Password</strong></a></p>
+  <!--Looks for the Home function in the app.py script-->
+  <h4><a href="{{ url_for('Home') }}"><strong>Go Home</strong></a></h4>
+	<!--Looks for the signup function in the app.py script-->
+	<p><a href="{{ url_for('signup') }}"><strong>Sign Up</strong></a></p>
   </section>
 </center>
 </body>
