@@ -35,10 +35,12 @@ Added in app routes and templates <br>
 Users can make an account, login, and reset their password <br>
 
 # Current Features as of V-0.20:
-- Version 0.01 is an internal development version, the official release version will be 1.00!
+- Version 0.20 is an internal development version, the official release version will be 1.00!
 
 # Future Features to Implement:
-- 
+- Task managemnt functions such as adding, editing, deleting, etc
+- Profile management functions such as setting a new password and changing a username
+- UI and UX needs to be implemented to streamline the web application
 
 # Known/Possible Bugs:
 - No errors.....yet (Israel)
