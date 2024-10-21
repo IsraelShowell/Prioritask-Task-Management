@@ -1,28 +1,55 @@
 <!DOCTYPE html>
-<!--Israel Showell-->
 <html lang="en">
-    
+<!--Israel Showell-->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Management Dashboard</title>
-	<!--Looks for the url of a css file that I will add in the future-->
-    <link rel="stylesheet" type=text/css href="{{url_for('static',filename='custom.css')}}">
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap"
-      rel="stylesheet"/>
-
+    <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='custom.css') }}">
 </head>
 
 <body>
-<center>
-   <h1>User Details<h1>
-   <section class="dashboard-section">
-		<p><strong>Welcome {{name}}!!</strong></p>
-		<!--Looks for the Home function in the app.py script-->
-		<h4><a href="{{ url_for('Home') }}"><strong>Logout</strong></a></h4>
-	</section>
-</center>
+    <center>
+        <h1>User Details</h1>
+        <section class="dashboard-section">
+            <p><strong>Welcome, {{ name }}!</strong></p>
+            <h4><a href="{{ url_for('Home') }}"><strong>Logout</strong></a></h4>
+        </section>
+
+        <h2>Your Tasks</h2>
+        <ul>
+            {% for task in tasks %}
+                <li>
+                    <strong>{{ task[1] }}</strong>: {{ task[2] }}<br>
+                    Importance: {{ task[3] }} | Urgency: {{ task[4] }} | Deadline: {{ task[5] }}
+                    <a href="{{ url_for('update_task', task_id=task[0]) }}">Edit</a> |
+                    <a href="{{ url_for('delete_task', task_id=task[0]) }}">Delete</a>
+                </li>
+            {% endfor %}
+        </ul>
+        
+
+        <form method="POST" action="{{ url_for('dashboard') }}">
+            <h3>Create a New Task</h3>
+            <input type="text" name="TaskName" placeholder="Task Name" required><br>
+            <textarea name="TaskDesc" placeholder="Task Description" required></textarea><br>
+            <input type="number" name="Importance" min="1" max="4" placeholder="Importance (1-4)" required><br>
+            <input type="number" name="Urgency" min="1" max="4" placeholder="Urgency (1-4)" required><br>
+            <input type="date" name="Deadline" required><br>
+            <button type="submit">Add Task</button>
+        </form>
+
+        <div class="pagination">
+            {% if page > 1 %}
+                <a href="{{ url_for('dashboard', name=name, page=page-1) }}">Previous</a>
+            {% endif %}
+            <span>Page {{ page }} of {{ total_pages }}</span>
+            {% if page < total_pages %}
+                <a href="{{ url_for('dashboard', name=name, page=page+1) }}">Next</a>
+            {% endif %}
+        </div>
+
+    </center>
 </body>
+
 </html>

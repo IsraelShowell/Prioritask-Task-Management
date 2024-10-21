@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Inventory Management - Login Backend
-# Version: 0.20
+# Version: 0.30
 
 # Description:
 This repository is for our senior design project from UMES, given to us in the Fall of 2024.
@@ -34,8 +34,13 @@ Uploaded to Github <br>
 Added in app routes and templates <br>
 Users can make an account, login, and reset their password <br>
 
-# Current Features as of V-0.20:
-- Version 0.20 is an internal development version, the official release version will be 1.00!
+# Version History:
+# V-0.30: (10-21-24)
+Developed the Task creation, editing, and deleting functions <br>
+Blueprint for the next task management functions are in development <br>
+
+# Current Features as of V-0.30:
+- Version 0.30 is an internal development version, the official release version will be 1.00!
 
 # Future Features to Implement:
 - Task managemnt functions such as adding, editing, deleting, etc

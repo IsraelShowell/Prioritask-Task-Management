@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!--Israel Showell-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Task</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+    <h1>Update Task</h1>
+
+    <!-- Display error message if any -->
+    {% if error %}
+        <p class="error" style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <!-- Task update form -->
+    <form method="POST" action="{{ url_for('update_task', task_id=request.args.get('task_id')) }}">
+        <label for="task_name">Task Name:</label>
+        <input type="text" name="TaskName" id="task_name" value="{{ task[0] }}" required>
+    
+        <label for="task_desc">Task Description:</label>
+        <textarea name="TaskDesc" id="task_desc" rows="4" required>{{ task[1] }}</textarea>
+    
+        <label for="importance">Importance (1-4):</label>
+        <input type="number" name="Importance" id="importance" min="1" max="4" value="{{ task[2] }}" required>
+    
+        <label for="urgency">Urgency (1-4):</label>
+        <input type="number" name="Urgency" id="urgency" min="1" max="4" value="{{ task[3] }}" required>
+    
+        <label for="deadline">Deadline:</label>
+        <input type="date" name="Deadline" id="deadline" value="{{ task[4] }}" required>
+    
+        <input type="submit" value="Update Task">
+    </form>    
+
+    <!-- Navigation back to dashboard -->
+    <div class="nav-links">
+        <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    </div>
+</body>
+</html>

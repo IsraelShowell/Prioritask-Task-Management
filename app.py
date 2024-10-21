@@ -13,9 +13,10 @@ The programming for this project was begun September 27th 2024 and was finished 
 """
 
 #These are the imported libaries I am using to make the program
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, session, redirect, url_for
 from signupForm import signUpForm
 from datetime import datetime
+from math import ceil
 import sqlite3
 
 
@@ -109,20 +110,32 @@ def login():
         #c serves as a database cursor, a control structure that enables traversal over the records in a database
         manage_cursor = login_connection.cursor()
 
-        #statement holds an SQL Query for the users table in the users database
+        #The variable statement holds an SQL Query for the users table in the users database
         #This query checks to see if the user and password entered exist in the database
-        statement=f"SELECT * from users WHERE Username='{userName}' AND Password='{passWord}';"
-
+        statement = "SELECT User_ID FROM users WHERE Username=? AND Password=?;"
+        
         #We then tell the cursor to run the query
-        manage_cursor.execute(statement)
+        manage_cursor.execute(statement, (userName, passWord))
+        
+        #This gets the user's data (user_id, username)
+        user_data = manage_cursor.fetchone()
+            
         #manage_cursor.fetchone fetchs the next row of a query resultand returns a single tuple,
         #Or None if no more rows are available.
-        if not manage_cursor.fetchone():
+        if not user_data:
             #If the user and password is not found, the program will not sign them in
             return render_template("login.html")
         else:
-            #If the login is right, they go to the dashboard page, and their name is displayed
-            return render_template('dashboard.html', name=userName)
+            print(user_data[0])
+            
+            #The user's name and ID are stored in the session objects for later retrieval and use
+            # If the user exists, store their ID and name in session
+            session['user_id'] = user_data[0]
+            session['user_name'] = userName
+            
+            #If the login is right, they go to the dashboard function, and their name is displayed
+            request.method = 'GET'
+            return dashboard()
     else:
         #If the user is just going to the login page, the page is rendered by the program
          request.method=='GET'
@@ -169,10 +182,183 @@ def reset_password():
             #If the email is not found
             flash("No account found with that email address.", "error")
             return render_template('reset_password.html')
+        
     #Called on a normal GET request
     return render_template('reset_password.html')
 
 # End of Password Reset function
+
+
+#This route is used to create and display tasks
+@app.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    
+    #This gets the logged-in user’s id from the session object
+    user_id = session.get('user_id')
+    
+    #Ensures the user is logged in
+    if not user_id:
+        return render_template('login.html', error="Please log in to continue.")
+    
+    #This gets the logged-in username from the session object
+    user_name = session.get('user_name')
+    
+    #This gets the current page, with the default set to 1
+    page = int(request.args.get('page', 1))  
+    
+    #This limits the number of tasks per page to 10
+    tasks_per_page = 10  
+
+    #This creates the connect to the database
+    conn = sqlite3.connect('task-management.db')
+    cursor = conn.cursor()
+
+    #This handles task creation if the form is submitted
+    if request.method == 'POST' and 'TaskName' in request.form:
+        task_name = request.form['TaskName']
+        task_desc = request.form['TaskDesc']
+        importance = int(request.form['Importance'])
+        urgency = int(request.form['Urgency'])
+        deadline = request.form['Deadline']
+        date_created = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        #This inserts the new task into the database
+        cursor.execute(
+            """INSERT INTO tasks (TaskName, TaskDesc, Importance, Urgency, 
+            TaskDeadline, DateTaskCreated, Completed, User_ID) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+            (task_name, task_desc, importance, urgency, deadline, date_created, "false", user_id)
+        )
+        conn.commit()
+
+    #Gets the tasks for the current page
+    offset = (page - 1) * tasks_per_page
+    #Creates a new query to get the tasks for the current page
+    cursor.execute(
+        "SELECT Task_ID, TaskName, TaskDesc, Importance, Urgency, TaskDeadline FROM tasks "
+        "WHERE User_ID=? LIMIT ? OFFSET ?", (user_id, tasks_per_page, offset)
+    )
+    
+    #This puts all the tasks in the database for the user in the tasks tuple
+    tasks = cursor.fetchall()
+
+    #This gets the total number of tasks to determine the number of pages
+    cursor.execute("SELECT COUNT(*) FROM tasks WHERE User_ID=?", (user_id,))
+    total_tasks = cursor.fetchone()[0]
+    
+    #This makes sure that the number of isn't zero should there be no tasks
+    if cursor.fetchone():
+        total_pages = ceil(total_tasks / tasks_per_page)
+    else:
+        total_pages = 1
+
+    #This closes the connection to the database
+    conn.close()
+
+    #This renders the dashboard with tasks and the page info
+    return render_template('dashboard.html', name=user_name, tasks=tasks, page=page, total_pages=total_pages)
+
+
+# This route allows the user to update an existing task
+@app.route('/update_task', methods=['POST', 'GET'])
+def update_task():
+    # Get the task ID from query parameters
+    task_id = request.args.get('task_id')
+    # print(task_id)
+    
+    # Retrieve the user ID from the session
+    user_id = session.get('user_id')
+    if not user_id:
+        return render_template('dashboard.html', error="You must be logged in.")
+
+    # Connect to the database
+    conn = sqlite3.connect('task-management.db')
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        # Retrieve the form data
+        task_name = request.form.get('TaskName')
+        task_desc = request.form.get('TaskDesc')
+        importance = int(request.form.get('Importance'))
+        urgency = int(request.form.get('Urgency'))
+        deadline = request.form.get('Deadline')
+
+        # Ensure all fields contain data
+        if all([task_name, task_desc, importance, urgency, deadline]):
+            try:
+                # Execute the update query
+                cursor.execute(
+                    """UPDATE tasks SET TaskName = ?, TaskDesc = ?, Importance = ?, 
+                    Urgency = ?, TaskDeadline = ? WHERE Task_ID = ? AND User_ID = ?""",
+                    (task_name, task_desc, importance, urgency, deadline, task_id, user_id)
+                )
+                conn.commit()
+                conn.close()
+                # print(task_id)
+                #Redirects back to the dashboard
+                return redirect(url_for('dashboard'))
+            except Exception as e:
+                conn.rollback()
+                return render_template('update_task.html', task_id=task_id, error=f"Error updating task: {e}")
+        else:
+            return render_template('update_task.html', task_id=task_id, error="All fields are required.")
+    else:
+        # Pre-fill the form with the existing task data
+        cursor.execute(
+            """SELECT TaskName, TaskDesc, Importance, Urgency, TaskDeadline 
+               FROM tasks WHERE Task_ID = ? AND User_ID = ?""",
+            (task_id, user_id)
+        )
+        task = cursor.fetchone()
+        conn.close()
+        
+        if task:
+            # print(task_id)
+            return render_template('update_task.html', task=task)
+        else:
+            return dashboard()
+
+
+# This route handles the deletion of a task
+@app.route('/delete_task', methods=['GET'])
+def delete_task():
+    # Get the task ID from query parameters
+    task_id = request.args.get('task_id')
+
+    # Retrieve the user ID from the session
+    user_id = session.get('user_id')
+    if not user_id:
+        return render_template('dashboard.html', error="You must be logged in.")
+
+    try:
+        # Connect to the database and delete the task
+        conn = sqlite3.connect('task-management.db')
+        cursor = conn.cursor()
+        cursor.execute(
+            "DELETE FROM tasks WHERE Task_ID = ? AND User_ID = ?", 
+            (task_id, user_id)
+        )
+        conn.commit()
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return render_template('dashboard.html', error="Failed to delete task.")
+    finally:
+        conn.close()
+
+    return dashboard()
+
+
+#This is a helper function that will fetch the users tasks
+def fetch_tasks(user_id):
+    conn = sqlite3.connect('task-management.db')
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT Task_ID, TaskName, TaskDesc, Importance, Urgency, TaskDeadline "
+        "FROM tasks WHERE User_ID = ?", (user_id,)
+    )
+    tasks = cursor.fetchall()
+    conn.close()
+    return tasks
 
 
 #This is the start up function that runs when the app is ran in the command line to start
@@ -181,21 +367,17 @@ def startup():
     initial_connection = sqlite3.connect('task-management.db')
     #Sets a cursor to each database
     manage_cursor =  initial_connection.cursor()
+    
     #Runs a query to create a table if it does not exist
     #The data parameters that the tables can handle are a text username and a text password, etc
     #PRIMARY KEY automatically adds the UNIQUE constraint!
-    manage_cursor.execute("CREATE TABLE IF NOT EXISTS users(User_ID INTEGER PRIMARY KEY, Email text NOT NULL, Username text NOT NULL, Password text NOT NULL, PhoneNumber INTEGER NOT NULL, Gender text NOT NULL, Address text NOT NULL, Age INTEGER NOT NULL, DateAccountCreated text NOT NULL)")
-    manage_cursor.execute("CREATE TABLE IF NOT EXISTS tasks(Task_ID INTEGER PRIMARY KEY, TaskName text NOT NULL, TaskDesc text NOT NULL, Importance INTEGER NOT NULL, Urgency INTEGER NOT NULL, TaskDeadline text NOT NULL, DateTaskCreated text NOT NULL, User_ID INTEGER NOT NULL, Username text NOT NULL, FOREIGN KEY(User_ID) REFERENCES users(User_ID), FOREIGN KEY(Username) REFERENCES users(Username))")
+    manage_cursor.execute("CREATE TABLE IF NOT EXISTS users(User_ID INTEGER PRIMARY KEY, Email text NOT NULL UNIQUE, Username text NOT NULL UNIQUE, Password text NOT NULL, PhoneNumber INTEGER NOT NULL, Gender text NOT NULL, Address text NOT NULL, Age INTEGER NOT NULL, DateAccountCreated text NOT NULL)")
+    manage_cursor.execute("CREATE TABLE IF NOT EXISTS tasks(Task_ID INTEGER PRIMARY KEY, TaskName text NOT NULL, TaskDesc text NOT NULL, Importance INTEGER NOT NULL, Urgency INTEGER NOT NULL, TaskDeadline text NOT NULL, DateTaskCreated text NOT NULL, Completed text NOT NULL, User_ID INTEGER NOT NULL, FOREIGN KEY(User_ID) REFERENCES users(User_ID))")
 
     #Then the changes are added to the database
     initial_connection.commit()
 
 #End of Startup function
-
-
-
-
-
 
 
 #This needs to be outside of the __name__ part, because Flask skips over it.
