@@ -1,7 +1,7 @@
 # Contributors: Israel Showell, 
 # Start Date: 9/27/2024
 # End Date: /2024
-# Project: Inventory Management - Login Backend
+# Project: Prioitask - Task Management
 # Version: 0.30
 
 # Description:
