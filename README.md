@@ -1,8 +1,8 @@
-# Contributors: Israel Showell, 
+# Contributors: Israel Showell, Byronous Robinson, Christopher Turnbull, Jerome Foster, Kaleigha Hayes, Steker Jean Francois
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Prioitask - Task Management
-# Version: 0.30
+# Version: 0.40
 
 # Description:
 This repository is for our senior design project from UMES, given to us in the Fall of 2024.
@@ -24,26 +24,39 @@ In order to run this program follow the steps below;
 - While in the venv, install the requirements.txt file
 - Run: flask app.py
 
+# Contributor Roles: 
+ - Israel Showell; Full Stack-Developer, Database and Server Manager; Implemented the Back-End, bare bones Front-End, Database, and Server via PythonAnywhere
+
+
 # Version History:
-# V-0.10: (9-27-24)
+# V-0.10: (9-27-24) 
+# Contributors: Israel Showell
 Initial Version <br>
 Uploaded to Github <br>
 
 # Version History:
 # V-0.20: (9-29-24)
+# Contributors: Israel Showell
 Added in app routes and templates <br>
 Users can make an account, login, and reset their password <br>
 
 # Version History:
 # V-0.30: (10-21-24)
+# Contributors: Israel Showell
 Developed the Task creation, editing, and deleting functions <br>
 Blueprint for the next task management functions are in development <br>
 
-# Current Features as of V-0.30:
-- Version 0.30 is an internal development version, the official release version will be 1.00!
+# Version History:
+# V-0.40: (10-24-24)
+# Contributors: Israel Showell
+Developed the Task completion, filtering, sorting and searching functions <br>
+Preparing to begin first rounds of testing and UI/UX improvement by adding in css folder <br>
+
+# Current Features as of V-0.40:
+- Version 0.40 is an internal development version, the official release version will be 1.00!
 
 # Future Features to Implement:
-- Task managemnt functions such as adding, editing, deleting, etc
+- Task managemnt functions such as adding, editing, deleting, etc - Done!
 - Profile management functions such as setting a new password and changing a username
 - UI and UX needs to be implemented to streamline the web application
 

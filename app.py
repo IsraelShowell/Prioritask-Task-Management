@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Prioitask - Task Management Application
-# Version: 0.30
+# Version: 0.40
 
 # Description:
 """
@@ -125,6 +125,7 @@ def login():
         if not user_data:
             #If the user and password is not found, the program will not sign them in
             return render_template("login.html")
+        
         else:
             print(user_data[0])
             
@@ -209,9 +210,11 @@ def dashboard():
     #This limits the number of tasks per page to 10
     tasks_per_page = 10  
 
-    #This creates the connect to the database
-    conn = sqlite3.connect('task-management.db')
-    cursor = conn.cursor()
+    # Task completion logic
+    if 'complete_task' in request.form:
+        task_id = request.form.get('complete_task')
+        complete_task(task_id, user_id)
+        
 
     #This handles task creation if the form is submitted
     if request.method == 'POST' and 'TaskName' in request.form:
@@ -222,6 +225,10 @@ def dashboard():
         deadline = request.form['Deadline']
         date_created = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+        #This creates the connect to the database
+        conn = sqlite3.connect('task-management.db')
+        cursor = conn.cursor()
+    
         #This inserts the new task into the database
         cursor.execute(
             """INSERT INTO tasks (TaskName, TaskDesc, Importance, Urgency, 
@@ -230,14 +237,37 @@ def dashboard():
             (task_name, task_desc, importance, urgency, deadline, date_created, "false", user_id)
         )
         conn.commit()
+        conn.close()
+    
+    #These gather the search, sort, and filter parameters from the request
+    search_query = request.args.get('search', '')
+    sort_by = request.args.get('sort_by', 'DateTaskCreated')
+    sort_order = request.args.get('sort_order', 'DESC')
+    completed_filter = request.args.get('filter', 'all')
 
+    #This gets the search, sort, and filter clauses from their respective helper functions
+    search_clause, search_values = get_search_clause(search_query)  #Search helper function
+    sort_query = get_sort_clause(sort_by, sort_order)  #Sort helper function
+    filter_clause = get_filter_clause(completed_filter)  #Filter helper function
+
+        
     #Gets the tasks for the current page
     offset = (page - 1) * tasks_per_page
-    #Creates a new query to get the tasks for the current page
+    
+    #This creates the connect to the database
+    conn = sqlite3.connect('task-management.db')
+    cursor = conn.cursor()
+    
+    #Fetches tasks based on filters, search, and sort
     cursor.execute(
-        "SELECT Task_ID, TaskName, TaskDesc, Importance, Urgency, TaskDeadline FROM tasks "
-        "WHERE User_ID=? LIMIT ? OFFSET ?", (user_id, tasks_per_page, offset)
+        f"""SELECT Task_ID, TaskName, TaskDesc, Importance, Urgency, TaskDeadline, Completed 
+        FROM tasks 
+        WHERE User_ID = ? {search_clause} {filter_clause} 
+        {sort_query} 
+        LIMIT ? OFFSET ?""",
+        (user_id, *search_values, tasks_per_page, offset)
     )
+
     
     #This puts all the tasks in the database for the user in the tasks tuple
     tasks = cursor.fetchall()
@@ -256,8 +286,18 @@ def dashboard():
     conn.close()
 
     #This renders the dashboard with tasks and the page info
-    return render_template('dashboard.html', name=user_name, tasks=tasks, page=page, total_pages=total_pages)
-
+    # return render_template('dashboard.html', name=user_name, tasks=tasks, page=page, total_pages=total_pages)
+    return render_template(
+        'dashboard.html', 
+        name=user_name, 
+        tasks=tasks, 
+        page=page, 
+        total_pages=total_pages, 
+        search_query=search_query,
+        sort_by=sort_by,
+        sort_order=sort_order,
+        completed_filter=completed_filter
+    )
 
 # This route allows the user to update an existing task
 @app.route('/update_task', methods=['POST', 'GET'])
@@ -360,6 +400,44 @@ def fetch_tasks(user_id):
     conn.close()
     return tasks
 
+#This is a helper function to complete a task
+def complete_task(task_id, user_id):
+    conn = sqlite3.connect('task-management.db')
+    cursor = conn.cursor()
+    cursor.execute("UPDATE tasks SET Completed = 'true' WHERE Task_ID = ? AND User_ID = ?", (task_id, user_id))
+    conn.commit()
+    conn.close()
+
+#This is a helper function for the search functionality
+def get_search_clause(search_query):
+    
+    #This will take whatever is in the search bar and run a query based on it
+    if search_query:
+        return "AND (TaskName LIKE ? OR TaskDesc LIKE ?)", (f"{search_query}%", f"{search_query}%")
+    return "", ()
+
+#This is a helper function for the sort functionality
+def get_sort_clause(sort_by, sort_order):
+    
+    #Tells the program which sort columns are available
+    valid_sort_columns = ['TaskName', 'Importance', 'Urgency', 'TaskDeadline', 'DateTaskCreated']
+    
+    #If one isn't chosen, then this is the default
+    if sort_by not in valid_sort_columns:
+        sort_by = 'Importance'
+        
+        #Returns the chosen or default column and the SQLite query
+    return f"ORDER BY {sort_by} {sort_order}"
+
+#This is a helper function for the filter functionality
+def get_filter_clause(completed_filter):
+    
+    #Checks if the filter is completed or incomplete
+    if completed_filter == 'completed':
+        return "AND Completed = 'true'"
+    elif completed_filter == 'incomplete':
+        return "AND Completed = 'false'"
+    return ""
 
 #This is the start up function that runs when the app is ran in the command line to start
 def startup():

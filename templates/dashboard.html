@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Management Dashboard</title>
-    <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='custom.css') }}">
+    <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 
 <body>
@@ -16,7 +16,68 @@
             <h4><a href="{{ url_for('Home') }}"><strong>Logout</strong></a></h4>
         </section>
 
-        <h2>Your Tasks</h2>
+        <!-- Add a search form -->
+<form method="get" action="{{ url_for('dashboard') }}">
+    <input type="text" name="search" value="{{ search_query }}" placeholder="Search tasks...">
+    <button type="submit">Search</button>
+</form>
+
+<!-- Add sorting options -->
+<form method="get" action="{{ url_for('dashboard') }}">
+    <select name="sort_by">
+        <option value="TaskName" {% if sort_by == 'TaskName' %}selected{% endif %}>Task Name</option>
+        <option value="Importance" {% if sort_by == 'Importance' %}selected{% endif %}>Importance</option>
+        <option value="Urgency" {% if sort_by == 'Urgency' %}selected{% endif %}>Urgency</option>
+        <option value="TaskDeadline" {% if sort_by == 'TaskDeadline' %}selected{% endif %}>Deadline</option>
+        <option value="DateTaskCreated" {% if sort_by == 'DateTaskCreated' %}selected{% endif %}>Date Created</option>
+    </select>
+    <select name="sort_order">
+        <option value="ASC" {% if sort_order == 'ASC' %}selected{% endif %}>Ascending</option>
+        <option value="DESC" {% if sort_order == 'DESC' %}selected{% endif %}>Descending</option>
+    </select>
+    <button type="submit">Sort</button>
+</form>
+
+<!-- Add filtering options -->
+<form method="get" action="{{ url_for('dashboard') }}">
+    <select name="filter">
+        <option value="all" {% if completed_filter == 'all' %}selected{% endif %}>All Tasks</option>
+        <option value="completed" {% if completed_filter == 'completed' %}selected{% endif %}>Completed Tasks</option>
+        <option value="incomplete" {% if completed_filter == 'incomplete' %}selected{% endif %}>Incomplete Tasks</option>
+    </select>
+    <button type="submit">Filter</button>
+</form>
+
+<!-- For each task, its information will be printed out, and there will be a complete button beside it!-->
+    <h2>Your Tasks</h2>
+        <ul>
+            {% for task in tasks %}
+                <li>
+                    <strong>{{ task[1] }}</strong>: {{ task[2] }}<br>
+                    Importance: {{ task[3] }} | Urgency: {{ task[4] }} | Deadline: {{ task[5] }}
+                    
+                    <!-- Display a check mark if the task is completed -->
+                    {% if task[6] == 'true' %}
+                        ✓ <!-- Completed task check mark -->
+                    {% endif %}
+                    
+                    <a href="{{ url_for('update_task', task_id=task[0]) }}">Edit</a> |
+                    <a href="{{ url_for('delete_task', task_id=task[0]) }}">Delete</a>
+                </li>
+                {% if task[6] == 'false' %}
+                <form method="POST" action="{{ url_for('dashboard') }}">
+                    <button type="submit" name="complete_task" value="{{ task[0] }}">Mark as Complete</button>
+                </form>
+                {% else %}
+                <!--<form method="POST" action="{{ url_for('dashboard') }}">
+                    <button type="submit" name="complete_task" value="{{ task[0] }}">Mark as Incomplete</button>
+                </form>-->
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+
+        <!--<h2>Your Tasks</h2>
         <ul>
             {% for task in tasks %}
                 <li>
@@ -28,7 +89,29 @@
             {% endfor %}
         </ul>
         
+        <form method="GET" action="{{ url_for('dashboard') }}">
+             Search Input 
+            <input type="text" name="search" placeholder="Search tasks" value="{{ search_term }}">
+        
+            <!-- Sort Dropdown 
+            <select name="sort">
+                <option value="date" {% if sort_by == 'date' %}selected{% endif %}>Sort by Date</option>
+                <option value="importance" {% if sort_by == 'importance' %}selected{% endif %}>Sort by Importance</option>
+                <option value="urgency" {% if sort_by == 'urgency' %}selected{% endif %}>Sort by Urgency</option>
+            </select>
+        
+            <!-- Filter Dropdown 
+            <select name="filter">
+                <option value="" {% if filter_status == '' %}selected{% endif %}>All Tasks</option>
+                <option value="completed" {% if filter_status == 'completed' %}selected{% endif %}>Completed</option>
+                <option value="incomplete" {% if filter_status == 'incomplete' %}selected{% endif %}>Incomplete</option>
+            </select>
+        
+            <!-- Submit Button 
+            <button type="submit">Apply</button>
+        </form> -->
 
+        
         <form method="POST" action="{{ url_for('dashboard') }}">
             <h3>Create a New Task</h3>
             <input type="text" name="TaskName" placeholder="Task Name" required><br>
