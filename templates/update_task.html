@@ -27,10 +27,10 @@
         <textarea name="TaskDesc" id="task_desc" rows="4" required>{{ task[1] }}</textarea>
     
         <label for="importance">Importance (1-4):</label>
-        <input type="number" name="Importance" id="importance" min="1" max="4" value="{{ task[2] }}" required>
+        <input type="number" name="Importance" id="importance" min="1" max="2" value="{{ task[2] }}" required>
     
         <label for="urgency">Urgency (1-4):</label>
-        <input type="number" name="Urgency" id="urgency" min="1" max="4" value="{{ task[3] }}" required>
+        <input type="number" name="Urgency" id="urgency" min="1" max="2" value="{{ task[3] }}" required>
     
         <label for="deadline">Deadline:</label>
         <input type="date" name="Deadline" id="deadline" value="{{ task[4] }}" required>
