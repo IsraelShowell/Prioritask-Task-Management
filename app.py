@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Prioitask - Task Management Application
-# Version: 0.40
+# Version: 0.50
 
 # Description:
 """
@@ -241,8 +241,8 @@ def dashboard():
     
     #These gather the search, sort, and filter parameters from the request
     search_query = request.args.get('search', '')
-    sort_by = request.args.get('sort_by', 'DateTaskCreated')
-    sort_order = request.args.get('sort_order', 'DESC')
+    sort_by = request.args.get('sort_by', 'Importance')
+    sort_order = request.args.get('sort_order', 'ASC')
     completed_filter = request.args.get('filter', 'all')
 
     #This gets the search, sort, and filter clauses from their respective helper functions

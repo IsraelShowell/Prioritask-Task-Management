@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Prioitask - Task Management
-# Version: 0.40
+# Version: 0.50
 
 # Description:
 This repository is for our senior design project from UMES, given to us in the Fall of 2024.
@@ -25,7 +25,7 @@ In order to run this program follow the steps below;
 - Run: flask app.py
 
 # Contributor Roles: 
- - Israel Showell; Full Stack-Developer, Database and Server Manager; Implemented the Back-End, bare bones Front-End, Database, and Server via PythonAnywhere
+ - Israel Showell; Full Stack-Developer, Database and Server Manager; Implemented the Back-End, the bare bones Front-End, Database schema and implementation, and Server hosting via PythonAnywhere
 
 
 # Version History:
@@ -52,11 +52,19 @@ Blueprint for the next task management functions are in development <br>
 Developed the Task completion, filtering, sorting and searching functions <br>
 Preparing to begin first rounds of testing and UI/UX improvement by adding in css folder <br>
 
-# Current Features as of V-0.40:
-- Version 0.40 is an internal development version, the official release version will be 1.00!
+
+# Version History:
+# V-0.50: (10-29-24)
+# Contributors: Israel Showell
+Web application is now avalible online, and as of the first round of testing, everything, including the database, works as intended! <br>
+Site Link: https://ishowell.pythonanywhere.com/
+
+# Current Features as of V-0.50:
+- Version 0.50 is an internal development version, the official release version will be 1.00!
 
 # Future Features to Implement:
 - Task managemnt functions such as adding, editing, deleting, etc - Done!
+- Get the web application working online with the database - Done!
 - Profile management functions such as setting a new password and changing a username
 - UI and UX needs to be implemented to streamline the web application
 
