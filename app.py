@@ -66,7 +66,7 @@ def signup():
 
             #statement holds an SQL Query for the users table in the users database
             #This query checks to see if the user, password, and email entered exist in the database
-            statement=f"SELECT * from users WHERE Username='{userName}' AND Password='{passWord}' AND Email='{E_mail}';"
+            statement=f"SELECT * from users WHERE Email='{E_mail}';"
 
             #We then tell the cursor to run the query
             manage_cursor.execute(statement)
@@ -74,11 +74,12 @@ def signup():
             #Stores the result of the query in the data variable
             data=manage_cursor.fetchone()
 
-            #If the data matches both the password and username, then the user will be taken to the error page
+            #If the data matches the Email then, the user will go to the error page
             if data:
+                signUp_connection.close()
                 return render_template("error.html")
             else:
-                #If at least the Email, Username, and Password are different from what is in the database
+                #If at least the Email, is  different from what is in the database
                 if not data:
                     #Then the user's information will be added into the database
                     date_created = str(datetime.now())
@@ -446,7 +447,7 @@ def startup():
     #Runs a query to create a table if it does not exist
     #The data parameters that the tables can handle are a text username and a text password, etc
     #PRIMARY KEY automatically adds the UNIQUE constraint!
-    manage_cursor.execute("CREATE TABLE IF NOT EXISTS users(User_ID INTEGER PRIMARY KEY, Email text NOT NULL UNIQUE, Username text NOT NULL UNIQUE, Password text NOT NULL, PhoneNumber INTEGER NOT NULL, Gender text NOT NULL, Address text NOT NULL, Age INTEGER NOT NULL, DateAccountCreated text NOT NULL)")
+    manage_cursor.execute("CREATE TABLE IF NOT EXISTS users(User_ID INTEGER PRIMARY KEY, Email text NOT NULL UNIQUE, Username text NOT NULL, Password text NOT NULL, PhoneNumber INTEGER NOT NULL, Gender text NOT NULL, Address text NOT NULL, Age INTEGER NOT NULL, DateAccountCreated text NOT NULL)")
     manage_cursor.execute("CREATE TABLE IF NOT EXISTS tasks(Task_ID INTEGER PRIMARY KEY, TaskName text NOT NULL, TaskDesc text NOT NULL, Importance INTEGER NOT NULL, Urgency INTEGER NOT NULL, TaskDeadline text NOT NULL, DateTaskCreated text NOT NULL, Completed text NOT NULL, User_ID INTEGER NOT NULL, FOREIGN KEY(User_ID) REFERENCES users(User_ID))")
 
     #Then the changes are added to the database
