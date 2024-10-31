@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Prioitask - Task Management
-# Version: 0.50
+# Version: 0.60
 
 # Description:
 This repository is for our senior design project from UMES, given to us in the Fall of 2024.
@@ -31,36 +31,43 @@ In order to run this program follow the steps below;
 # Version History:
 # V-0.10: (9-27-24) 
 # Contributors: Israel Showell
-Initial Version <br>
-Uploaded to Github <br>
+- Initial Version <br>
+- Uploaded to Github <br>
+- Created flowcharts, diagrams, and database documentation <br>
 
 # Version History:
 # V-0.20: (9-29-24)
 # Contributors: Israel Showell
-Added in app routes and templates <br>
-Users can make an account, login, and reset their password <br>
+- Added in app routes, templates, and implemented the database <br>
+- Users can make an account, login, and reset their password <br>
 
 # Version History:
 # V-0.30: (10-21-24)
 # Contributors: Israel Showell
-Developed the Task creation, editing, and deleting functions <br>
-Blueprint for the next task management functions are in development <br>
+- Developed the task creation, editing, and deleting functions <br>
+- Developed blueprint for the next task management functions are in development <br>
 
 # Version History:
 # V-0.40: (10-24-24)
 # Contributors: Israel Showell
-Developed the Task completion, filtering, sorting and searching functions <br>
-Preparing to begin first rounds of testing and UI/UX improvement by adding in css folder <br>
+- Developed the task completion, filtering, sorting and searching functions <br>
+- Preparing to begin first rounds of testing and UI/UX improvement by adding in css folder <br>
 
 
 # Version History:
 # V-0.50: (10-29-24)
 # Contributors: Israel Showell
-Web application is now avalible online, and as of the first round of testing, everything, including the database, works as intended! <br>
-Site Link: https://ishowell.pythonanywhere.com/
+- Web application is now avalible online, and as of the first round of testing, everything, including the database, works as intended! <br>
+- Site Link: https://ishowell.pythonanywhere.com/
 
-# Current Features as of V-0.50:
-- Version 0.50 is an internal development version, the official release version will be 1.00!
+# Version History:
+# V-0.60: (10-31-24)
+# Contributors: Israel Showell
+- Updated the task completion, filtering, sorting and searching functions <br>
+- Enabled task pages, so that only 3 tasks show at one time <br>
+
+# Current Features as of V-0.60:
+- Version 0.60 is an internal development version, the official release version will be 1.00!
 
 # Future Features to Implement:
 - Task managemnt functions such as adding, editing, deleting, etc - Done!

@@ -207,8 +207,8 @@ def dashboard():
     #This gets the current page, with the default set to 1
     page = int(request.args.get('page', 1))  
     
-    #This limits the number of tasks per page to 10
-    tasks_per_page = 10  
+    #This limits the number of tasks per page to 3
+    tasks_per_page = 3  
 
     # Task completion logic
     if 'complete_task' in request.form:
@@ -275,12 +275,9 @@ def dashboard():
     #This gets the total number of tasks to determine the number of pages
     cursor.execute("SELECT COUNT(*) FROM tasks WHERE User_ID=?", (user_id,))
     total_tasks = cursor.fetchone()[0]
-    
-    #This makes sure that the number of isn't zero should there be no tasks
-    if cursor.fetchone():
-        total_pages = ceil(total_tasks / tasks_per_page)
-    else:
-        total_pages = 1
+
+    # Calculate total pages based on total tasks
+    total_pages = ceil(total_tasks / tasks_per_page) if total_tasks > 0 else 1
 
     #This closes the connection to the database
     conn.close()
