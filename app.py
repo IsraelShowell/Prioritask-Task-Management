@@ -41,55 +41,61 @@ def Home():
 
 #The signup Page is able to detect POST and GET requests
 #POST sends data, GET gets data
-@app.route('/signup', methods=['POST','GET']) 
+from flask import render_template, request, redirect, url_for, flash
+import re  # Regular expressions for password validation
+from datetime import datetime
+
+
+
+#This route is used to connect the user to the registration page
+@app.route('/signup', methods=['POST', 'GET'])
 def signup():
-    #This creates an object named signUp based off of the form defined in the formsubmission module
+    #Brings in the class from signUpForm
     signUp = signUpForm()
 
-    #The program connects to the database
-    signUp_connection=sqlite3.connect('task-management.db')
-    #c serves as a database cursor, a control structure that enables traversal over the records in a database
-    manage_cursor=signUp_connection.cursor()
+    # Connect to the database
+    signUp_connection = sqlite3.connect('task-management.db')
+    manage_cursor = signUp_connection.cursor()
 
-    #When the button is pressed, the user makes the page send a POST request
-    if request.method=='POST':
-        #Checks to make sure the user didn't leave the Username and Password fields blank
-        if(request.form["Username"]!="" and request.form["Password"]!=""):
-            #Saves the request's data in variables
-            E_mail = request.form['Email']
-            userName = request.form['Username']
-            passWord = request.form['Password']
+    # The signup page is rendered when a GET request is made
+    if request.method == 'POST':
+        username = request.form["Username"]
+        password = request.form["Password"]
+        email = request.form['Email']
 
-            #statement holds an SQL Query for the users table in the users database
-            #This query checks to see if the user, password, and email entered exist in the database
-            statement=f"SELECT * from users WHERE Email='{E_mail}';"
+        #Runs the Password validation
+        if not validate_password(password):
+            flash("Password must be at least 8 characters long and contain at least one number and one special character.")
+            return render_template('register.html', form=signUp)
 
-            #We then tell the cursor to run the query
-            manage_cursor.execute(statement)
+        if username and password:
+            # Check if email already exists
+            manage_cursor.execute("SELECT * FROM users WHERE Email = ?", (email,))
+            data = manage_cursor.fetchone()
 
-            #Stores the result of the query in the data variable
-            data=manage_cursor.fetchone()
-
-            #If the data matches the Email then, the user will go to the error page
+            # If the email already exists, display an error message
             if data:
                 signUp_connection.close()
                 return render_template("error.html")
             else:
-                #If at least the Email, is  different from what is in the database
-                if not data:
-                    #Then the user's information will be added into the database
-                    date_created = str(datetime.now())
-                    manage_cursor.execute("INSERT INTO users (Email,Username,Password,DateAccountCreated) VALUES (?,?,?,?)",(E_mail,userName,passWord,date_created))
-                    signUp_connection.commit()
-                    signUp_connection.close()
-                    #Then they are taken to the login page
-                    return render_template("login.html")
-                
-    #When a user first goes to the register page, the page is rendered with a fresh form
-    elif request.method=='GET':
-        return render_template('register.html',form=signUp)
+                #Adds the new user
+                date_created = str(datetime.now())
+                manage_cursor.execute("INSERT INTO users (Email, Username, Password, DateAccountCreated) VALUES (?, ?, ?, ?)",
+                                      (email, username, password, date_created))
+                signUp_connection.commit()
+                signUp_connection.close()
+                return render_template("login.html")
+    elif request.method == 'GET':
+        return render_template('register.html', form=signUp)
 
-#End of Signup function
+#Checks if the user's password is correct
+def validate_password(password):
+    """Validates the password against specified criteria."""
+    if (len(password) >= 8 and
+        re.search(r'\d', password) and
+        re.search(r'[!@#$%^&*(),.?":{}|<>]', password)):
+        return True
+    return False
 
 
 #The Login Page is able to detect POST and GET requests

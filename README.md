@@ -83,7 +83,7 @@ In order to run this program follow the steps below;
 - Completed tasks now are sent to a panel that displays all completed tasks <br>
 - Deletion of tasks are now confirmed before deletion is carried out <br>
 - Completed tasks are no longer appear on the regular dashboard portion of the application <br>
-
+- During registration, the user's password is checked for its strength before adding the user into the database <br>
 
 # Current Features as of V-0.80:
 - Version 0.80 is an internal development version, the official release version will be 1.00!
