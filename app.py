@@ -152,43 +152,49 @@ def login():
 # POST sends data, GET gets data
 @app.route('/reset_password', methods=['POST', 'GET'])
 def reset_password():
-    
-    #Occures when the user presses the submit button
+    # Occurs when the user presses the submit button
     if request.method == 'POST':
         email = request.form['Email']
         new_password = request.form['NewPassword']
         confirm_password = request.form['ConfirmPassword']
         
-        #Checks if both password fields match
+        # Checks if both password fields match
         if new_password != confirm_password:
             flash("Passwords do not match!", "error")
             return render_template('reset_password.html')
 
-        #Connects to the database
+        # Validate the new password
+        if not validate_password(new_password):
+            flash("New password must be at least 8 characters long and contain at least one number and one special character.", "error")
+            return render_template('reset_password.html')
+
+        # Connects to the database
         reset_connection = sqlite3.connect('task-management.db')
         manage_cursor = reset_connection.cursor()
 
-        #Checks if the email exists in the database
+        # Checks if the email exists in the database
         manage_cursor.execute("SELECT * FROM users WHERE Email=?", (email,))
         user_data = manage_cursor.fetchone()
 
-        #If the user entered a valid email
+        # If the user entered a valid email
         if user_data:
-            #Updates the user's password in the database
+            # Updates the user's password in the database
             manage_cursor.execute("UPDATE users SET Password=? WHERE Email=?", (new_password, email))
             reset_connection.commit()
             reset_connection.close()
             
-            #This will notify the user that the password has been changed
+            # This will notify the user that the password has been changed
             flash("Your password has been successfully updated. Please log in with your new password.", "info")
             return render_template('login.html')
         else:
-            #If the email is not found
+            # If the email is not found
             flash("No account found with that email address.", "error")
             return render_template('reset_password.html')
         
-    #Called on a normal GET request
+    # Called on a normal GET request
     return render_template('reset_password.html')
+
+# End of Password Reset function
 
 # End of Password Reset function
 
