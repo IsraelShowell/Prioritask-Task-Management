@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Prioitask - Task Management
-# Version: 0.60
+# Version: 0.70
 
 # Description:
 This repository is for our senior design project from UMES, given to us in the Fall of 2024.
@@ -12,6 +12,8 @@ The programming for this project was begun September 27th 2024 and was finished 
 # Skills Practiced:
 - Web Application Development
 - Full-Stack Development (Front/Back-End)
+- Database Management
+- Server Management
 - UI/UX Design
 - Collaboration
 - Meeting a tight deadline
@@ -66,8 +68,16 @@ In order to run this program follow the steps below;
 - Updated the task completion, filtering, sorting and searching functions <br>
 - Enabled task pages, so that only 3 tasks show at one time <br>
 
-# Current Features as of V-0.60:
-- Version 0.60 is an internal development version, the official release version will be 1.00!
+# Version History:
+# V-0.70: (11-4-24)
+# Contributors: Israel Showell
+- Updated the task completion, filtering, and sorting functions to include more options <br>
+- Rearranged and added to UI elements to provide a clearer idea of how to use the application  <br>
+- Updated the sign up page to request less user information <br>
+- Updated the importance and urgency functionalities, and implemented a task ranking system <br>
+
+# Current Features as of V-0.70:
+- Version 0.70 is an internal development version, the official release version will be 1.00!
 
 # Future Features to Implement:
 - Task managemnt functions such as adding, editing, deleting, etc - Done!

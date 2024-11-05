@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Prioitask - Task Management Application
-# Version: 0.50
+# Version: 0.70
 
 # Description:
 """
@@ -25,14 +25,7 @@ class signUpForm(FlaskForm):
     Username=StringField(label="Username",validators=[DataRequired()])
     #Creates the password field and requires users to use it.
     Password=PasswordField(label="Password",validators=[DataRequired()])
-    #Creates the phone field and requires users to use it.
-    PhoneNumber=IntegerField(label="Enter Mobile Number",validators=[DataRequired()])
-    #Creates the Gender field 
-    Gender=StringField(label="Gender")
-    #Creates the address TextAreaField 
-    Address=TextAreaField(label="Address")
-    #Creates the username field and requires users to use it.
-    Age=IntegerField(label="Age")
+    
     #Creates the button for users to submit their form
     Submit=SubmitField(label="Send")
 

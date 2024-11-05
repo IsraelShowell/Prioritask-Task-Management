@@ -30,9 +30,7 @@ and includes inputs for email, username, password, phone number, gender, address
    {% for message in form.Username.errors%}
    <div{{message}}</div>
    {%endfor%}
-   {% for message in form.PhoneNumber.errors%}
-   <div{{message}}</div>
-   {%endfor%}
+
    {% for message in form.Password.errors%}
    <div{{message}}</div>
    {%endfor%}
@@ -56,22 +54,7 @@ and includes inputs for email, username, password, phone number, gender, address
 				<td>{{form.Password.label}}</td>
 				<td>{{form.Password}}</td>
 			</tr>
-			<tr>
-				<td>{{form.PhoneNumber.label}}</td>
-				<td>{{form.PhoneNumber}}</td>
-			</tr>
-			<tr>
-				<td>{{form.Gender.label}}</td>
-				<td>{{form.Gender}}</td>
-			</tr>
-			<tr>
-				<td>{{form.Address.label}}</td>
-				<td>{{form.Address}}</td>
-			</tr>
-			<tr>
-				<td>{{form.Age.label}}</td>
-				<td>{{form.Age}}</td>
-			</tr>
+			
 			<tr>
 				<td></td>
 				<td>{{form.Submit(class="anchor-button")}}</td>

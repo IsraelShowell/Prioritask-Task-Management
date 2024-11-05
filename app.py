@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Prioitask - Task Management Application
-# Version: 0.50
+# Version: 0.70
 
 # Description:
 """
@@ -59,10 +59,6 @@ def signup():
             E_mail = request.form['Email']
             userName = request.form['Username']
             passWord = request.form['Password']
-            PhoneNumber = request.form['PhoneNumber']
-            Gender = request.form['Gender']
-            Address = request.form['Address']
-            Age = request.form['Age']
 
             #statement holds an SQL Query for the users table in the users database
             #This query checks to see if the user, password, and email entered exist in the database
@@ -83,7 +79,7 @@ def signup():
                 if not data:
                     #Then the user's information will be added into the database
                     date_created = str(datetime.now())
-                    manage_cursor.execute("INSERT INTO users (Email,Username,Password,PhoneNumber,Gender,Address,Age,DateAccountCreated) VALUES (?,?,?,?,?,?,?,?)",(E_mail,userName,passWord,PhoneNumber,Gender,Address,Age,date_created))
+                    manage_cursor.execute("INSERT INTO users (Email,Username,Password,DateAccountCreated) VALUES (?,?,?,?)",(E_mail,userName,passWord,date_created))
                     signUp_connection.commit()
                     signUp_connection.close()
                     #Then they are taken to the login page
@@ -137,7 +133,7 @@ def login():
             
             #If the login is right, they go to the dashboard function, and their name is displayed
             request.method = 'GET'
-            return dashboard()
+            return redirect(url_for('dashboard'))
     else:
         #If the user is just going to the login page, the page is rendered by the program
          request.method=='GET'
@@ -217,39 +213,39 @@ def dashboard():
         complete_task(task_id, user_id)
         
 
-    #This handles task creation if the form is submitted
     if request.method == 'POST' and 'TaskName' in request.form:
         task_name = request.form['TaskName']
         task_desc = request.form['TaskDesc']
-        importance = int(request.form['Importance'])
-        urgency = int(request.form['Urgency'])
+        priority = request.form['Priority'] 
+        ranking = int(request.form['Ranking'])
         deadline = request.form['Deadline']
-        date_created = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        date_created = datetime.now().strftime('%m-%d-%Y %H:%M:%S')
 
-        #This creates the connect to the database
         conn = sqlite3.connect('task-management.db')
         cursor = conn.cursor()
-    
-        #This inserts the new task into the database
+
+        # Insert task with Priority as a descriptive string and Ranking as an integer
         cursor.execute(
-            """INSERT INTO tasks (TaskName, TaskDesc, Importance, Urgency, 
+            """INSERT INTO tasks (TaskName, TaskDesc, Priority, Ranking, 
             TaskDeadline, DateTaskCreated, Completed, User_ID) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-            (task_name, task_desc, importance, urgency, deadline, date_created, "false", user_id)
+            (task_name, task_desc, priority, ranking, deadline, date_created, "false", user_id)
         )
         conn.commit()
         conn.close()
-    
+
+      
     #These gather the search, sort, and filter parameters from the request
     search_query = request.args.get('search', '')
-    sort_by = request.args.get('sort_by', 'Importance')
-    sort_order = request.args.get('sort_order', 'ASC')
+    sort_by = request.args.get('sort_by', 'Priority')
+    sort_order = request.args.get('sort_order', 'DESC')
     completed_filter = request.args.get('filter', 'all')
+    priority_filter = request.args.get('priority_filter', 'all')
 
     #This gets the search, sort, and filter clauses from their respective helper functions
     search_clause, search_values = get_search_clause(search_query)  #Search helper function
     sort_query = get_sort_clause(sort_by, sort_order)  #Sort helper function
-    filter_clause = get_filter_clause(completed_filter)  #Filter helper function
+    filter_clause = get_filter_clause(completed_filter, priority_filter) #Filter helper function
 
         
     #Gets the tasks for the current page
@@ -260,14 +256,15 @@ def dashboard():
     cursor = conn.cursor()
     
     #Fetches tasks based on filters, search, and sort
-    cursor.execute(
-        f"""SELECT Task_ID, TaskName, TaskDesc, Importance, Urgency, TaskDeadline, Completed 
+    query = f"""
+        SELECT Task_ID, TaskName, TaskDesc, Priority, Ranking, TaskDeadline, Completed 
         FROM tasks 
-        WHERE User_ID = ? {search_clause} {filter_clause} 
-        {sort_query} 
-        LIMIT ? OFFSET ?""",
-        (user_id, *search_values, tasks_per_page, offset)
-    )
+        WHERE User_ID = ? {search_clause} {filter_clause} {sort_query} 
+        LIMIT ? OFFSET ?
+    """
+    parameters = (user_id, *search_values, tasks_per_page, offset)
+
+    cursor.execute(query, parameters)
 
     
     #This puts all the tasks in the database for the user in the tasks tuple
@@ -294,7 +291,8 @@ def dashboard():
         search_query=search_query,
         sort_by=sort_by,
         sort_order=sort_order,
-        completed_filter=completed_filter
+        completed_filter=completed_filter,
+        priority_filter=priority_filter
     )
 
 # This route allows the user to update an existing task
@@ -317,18 +315,17 @@ def update_task():
         # Retrieve the form data
         task_name = request.form.get('TaskName')
         task_desc = request.form.get('TaskDesc')
-        importance = int(request.form.get('Importance'))
-        urgency = int(request.form.get('Urgency'))
+        priority = request.form.get('Priority')
+        ranking = int(request.form.get('Ranking'))
         deadline = request.form.get('Deadline')
 
         # Ensure all fields contain data
-        if all([task_name, task_desc, importance, urgency, deadline]):
+        if all([task_name, task_desc, priority, ranking, deadline]):
             try:
                 # Execute the update query
                 cursor.execute(
-                    """UPDATE tasks SET TaskName = ?, TaskDesc = ?, Importance = ?, 
-                    Urgency = ?, TaskDeadline = ? WHERE Task_ID = ? AND User_ID = ?""",
-                    (task_name, task_desc, importance, urgency, deadline, task_id, user_id)
+                    """UPDATE tasks SET TaskName = ?, TaskDesc = ?, Priority = ?, Ranking = ?, TaskDeadline = ? WHERE Task_ID = ? AND User_ID = ?""",
+                    (task_name, task_desc, priority, ranking, deadline, task_id, user_id)
                 )
                 conn.commit()
                 conn.close()
@@ -343,7 +340,7 @@ def update_task():
     else:
         # Pre-fill the form with the existing task data
         cursor.execute(
-            """SELECT TaskName, TaskDesc, Importance, Urgency, TaskDeadline 
+            """SELECT TaskName, TaskDesc, Priority, Ranking, TaskDeadline 
                FROM tasks WHERE Task_ID = ? AND User_ID = ?""",
             (task_id, user_id)
         )
@@ -391,7 +388,7 @@ def fetch_tasks(user_id):
     conn = sqlite3.connect('task-management.db')
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT Task_ID, TaskName, TaskDesc, Importance, Urgency, TaskDeadline "
+        "SELECT Task_ID, TaskName, TaskDesc, Priority, Ranking, TaskDeadline "
         "FROM tasks WHERE User_ID = ?", (user_id,)
     )
     tasks = cursor.fetchall()
@@ -414,28 +411,45 @@ def get_search_clause(search_query):
         return "AND (TaskName LIKE ? OR TaskDesc LIKE ?)", (f"{search_query}%", f"{search_query}%")
     return "", ()
 
-#This is a helper function for the sort functionality
-def get_sort_clause(sort_by, sort_order):
-    
-    #Tells the program which sort columns are available
-    valid_sort_columns = ['TaskName', 'Importance', 'Urgency', 'TaskDeadline', 'DateTaskCreated']
-    
-    #If one isn't chosen, then this is the default
+#This is a helper function for the sorting functionality
+def get_sort_clause(sort_by, sort_order): 
+    valid_sort_columns = ['Priority', 'TaskName', 'TaskDeadline', 'DateTaskCreated', 'Ranking']
+
+    # Ensure the primary sort column is valid
     if sort_by not in valid_sort_columns:
-        sort_by = 'Importance'
-        
-        #Returns the chosen or default column and the SQLite query
-    return f"ORDER BY {sort_by} {sort_order}"
+        sort_by = 'Priority'  # default sorting column
+
+    # Start building the sort clause
+    sort_clause = f"ORDER BY {sort_by} {sort_order}"
+
+    # If the primary sort column is Priority, sort by Ranking as the secondary criterion
+    if sort_by == 'Priority':
+        sort_clause += ", Ranking " + sort_order  # Order for Ranking can be adjusted as needed
+
+    return sort_clause
+
+
 
 #This is a helper function for the filter functionality
-def get_filter_clause(completed_filter):
+def get_filter_clause(completed_filter, priority_filter):
+    filter_clauses = []
     
-    #Checks if the filter is completed or incomplete
+    # Check if the filter is for completed or incomplete tasks
     if completed_filter == 'completed':
-        return "AND Completed = 'true'"
+        filter_clauses.append("Completed = 'true'")
     elif completed_filter == 'incomplete':
-        return "AND Completed = 'false'"
+        filter_clauses.append("Completed = 'false'")
+
+    # Check if a priority filter is set
+    if priority_filter and priority_filter != 'all':
+        filter_clauses.append(f"Priority = '{priority_filter}'")
+
+    # Combine all filter clauses with AND
+    if filter_clauses:
+        return "AND " + " AND ".join(filter_clauses)
+    
     return ""
+
 
 #This is the start up function that runs when the app is ran in the command line to start
 def startup():
@@ -447,8 +461,8 @@ def startup():
     #Runs a query to create a table if it does not exist
     #The data parameters that the tables can handle are a text username and a text password, etc
     #PRIMARY KEY automatically adds the UNIQUE constraint!
-    manage_cursor.execute("CREATE TABLE IF NOT EXISTS users(User_ID INTEGER PRIMARY KEY, Email text NOT NULL UNIQUE, Username text NOT NULL, Password text NOT NULL, PhoneNumber INTEGER NOT NULL, Gender text NOT NULL, Address text NOT NULL, Age INTEGER NOT NULL, DateAccountCreated text NOT NULL)")
-    manage_cursor.execute("CREATE TABLE IF NOT EXISTS tasks(Task_ID INTEGER PRIMARY KEY, TaskName text NOT NULL, TaskDesc text NOT NULL, Importance INTEGER NOT NULL, Urgency INTEGER NOT NULL, TaskDeadline text NOT NULL, DateTaskCreated text NOT NULL, Completed text NOT NULL, User_ID INTEGER NOT NULL, FOREIGN KEY(User_ID) REFERENCES users(User_ID))")
+    manage_cursor.execute("CREATE TABLE IF NOT EXISTS users(User_ID INTEGER PRIMARY KEY, Email text NOT NULL UNIQUE, Username text NOT NULL, Password text NOT NULL, DateAccountCreated text NOT NULL)")
+    manage_cursor.execute("CREATE TABLE IF NOT EXISTS tasks(Task_ID INTEGER PRIMARY KEY, TaskName text NOT NULL, TaskDesc text NOT NULL, Priority Text NOT NULL, TaskDeadline text NOT NULL, DateTaskCreated text NOT NULL, Completed text NOT NULL, Ranking INTEGER, User_ID INTEGER NOT NULL, FOREIGN KEY(User_ID) REFERENCES users(User_ID))")
 
     #Then the changes are added to the database
     initial_connection.commit()
