@@ -8,9 +8,38 @@
     <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='css/main.css') }}">
 
     <style>
-        ul {
+        /* Styling for the completed tasks panel */
+        #completedTasksPanel {
+            position: fixed;
+            left: -300px; /* Initially hidden */
+            top: 0;
+            width: 300px;
+            height: 100%;
+            background-color: #f9f9f9;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+            transition: left 0.3s ease;
+            padding: 15px;
+        }
+    
+        /* Button to toggle panel visibility - centered on the panel edge */
+        #togglePanelButton {
+            position: fixed;
+            top: 50%;
+            left: 30px;
+            transform: translate(-100%, -50%); /* Positions button on the left edge, vertically centered */
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        ul{
             list-style-type: none;
-          }
+        }
     </style>
 
 </head>
@@ -66,7 +95,7 @@
                     {% endif %}
                     
                     <a href="{{ url_for('update_task', task_id=task[0]) }}">Edit</a> |
-                    <a href="{{ url_for('delete_task', task_id=task[0]) }}">Delete</a>
+                    <a href="{{ url_for('delete_task', task_id=task[0]) }}" onclick="return confirmDeleteTask()">Delete</a>
                     <a href="{{ url_for('dashboard') }}">Ask Taski</a>
                 </li>
                 {% if task[6] == 'false' %}
@@ -81,13 +110,13 @@
             {% endfor %}
         </ul>
 
-        <!-- Add a search form -->
+        <!-- Adds a search form -->
         <form method="GET" action="{{ url_for('dashboard', name=name, page=1) }}">
             <input type="text" name="search" value="{{ search_query }}" placeholder="Search tasks...">
             <button type="submit">Search</button>
         </form>
         
-        <!-- Add sorting options -->
+        <!-- Adds sorting options -->
         <form method="GET" action="{{ url_for('dashboard', name=name, page=1) }}">
             <select name="sort_by">
                 <option value="Priority" {% if sort_by == 'Priority' %}selected{% endif %}>Priority</option>
@@ -129,7 +158,7 @@
         </form>
        
         
-
+        <!--Code for task pages-->
         <div class="pagination">
             {% if page > 1 %}
                 <a href="{{ url_for('dashboard', name=name, page=page-1, search=search_query, sort_by=sort_by, sort_order=sort_order, filter=completed_filter, priority_filter=priority_filter) }}">Previous</a>
@@ -140,6 +169,54 @@
             {% endif %}
         </div>
         
+        <button id="togglePanelButton" onclick="toggleCompletedTasks()">➔</button>
+        <!-- Completed Tasks Panel -->
+        <div id="completedTasksPanel">
+            <h2>Completed Tasks</h2>
+            <ul>
+                {% if completed_tasks %}
+                    {% for task in completed_tasks %}
+                        <li>
+                            <strong>{{ task[1] }}</strong>: {{ task[2] }}<br>
+                            Priority: {{ task[3] }} | Ranking: {{ task[4] }} | Deadline: {{ task[5] }}
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <p>No completed tasks.</p>
+                {% endif %}
+            </ul>
+        </div>
+        
+        <!--Script for completed tasks panel-->
+        <script>
+            function toggleCompletedTasks() {
+                var panel = document.getElementById("completedTasksPanel");
+                var button = document.getElementById("togglePanelButton");
+        
+                if (panel.style.left == "-300px") {
+                    panel.style.left = "10px";
+                    button.style.left = "340px"; // Adjusts button to this position when panel is open
+                    button.textContent = "←";
+                } else {
+                    panel.style.left = "-300px";
+                    button.style.left = "30px"; // Adjusts button to this position when panel is closed
+                    button.textContent = "➔";
+                }
+            }
+        </script>
+
+        <!--Script for confirming deletion of tasks-->
+        <script>
+            // Function to confirm deletion
+             
+            /*If the user clicks confirm, confirm() returns true, allowing the deletion action to proceed. 
+            If the user clicks cancels, confirm() returns false, preventing the link's default behavior.
+            */
+
+            function confirmDeleteTask() {
+                return confirm("Are you sure you want to delete this task?");
+            }
+        </script>
 
     </center>
 </body>

@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Prioitask - Task Management Application
-# Version: 0.70
+# Version: 0.80
 
 # Description:
 """
@@ -124,7 +124,7 @@ def login():
             return render_template("login.html")
         
         else:
-            print(user_data[0])
+            #print(user_data[0])
             
             #The user's name and ID are stored in the session objects for later retrieval and use
             # If the user exists, store their ID and name in session
@@ -191,20 +191,20 @@ def reset_password():
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     
-    #This gets the logged-in user’s id from the session object
+    # Get the logged-in user’s ID from the session object
     user_id = session.get('user_id')
     
-    #Ensures the user is logged in
+    # Ensure the user is logged in
     if not user_id:
         return render_template('login.html', error="Please log in to continue.")
     
-    #This gets the logged-in username from the session object
+    # Get the logged-in username from the session object
     user_name = session.get('user_name')
     
-    #This gets the current page, with the default set to 1
+    # Get the current page, with the default set to 1
     page = int(request.args.get('page', 1))  
     
-    #This limits the number of tasks per page to 3
+    # Limit the number of tasks per page
     tasks_per_page = 3  
 
     # Task completion logic
@@ -213,6 +213,7 @@ def dashboard():
         complete_task(task_id, user_id)
         
 
+    # Task creation logic
     if request.method == 'POST' and 'TaskName' in request.form:
         task_name = request.form['TaskName']
         task_desc = request.form['TaskDesc']
@@ -231,61 +232,65 @@ def dashboard():
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
             (task_name, task_desc, priority, ranking, deadline, date_created, "false", user_id)
         )
+        
         conn.commit()
         conn.close()
 
       
-    #These gather the search, sort, and filter parameters from the request
+    # Gather search, sort, and filter parameters from the request
     search_query = request.args.get('search', '')
     sort_by = request.args.get('sort_by', 'Priority')
     sort_order = request.args.get('sort_order', 'DESC')
     completed_filter = request.args.get('filter', 'all')
     priority_filter = request.args.get('priority_filter', 'all')
 
-    #This gets the search, sort, and filter clauses from their respective helper functions
-    search_clause, search_values = get_search_clause(search_query)  #Search helper function
-    sort_query = get_sort_clause(sort_by, sort_order)  #Sort helper function
-    filter_clause = get_filter_clause(completed_filter, priority_filter) #Filter helper function
+    # Get search, sort, and filter clauses from helper functions
+    search_clause, search_values = get_search_clause(search_query)
+    sort_query = get_sort_clause(sort_by, sort_order)
+    filter_clause = get_filter_clause(completed_filter, priority_filter)
 
         
-    #Gets the tasks for the current page
+    # Get tasks for the current page, excluding completed tasks from the main list
     offset = (page - 1) * tasks_per_page
     
-    #This creates the connect to the database
     conn = sqlite3.connect('task-management.db')
     cursor = conn.cursor()
     
-    #Fetches tasks based on filters, search, and sort
+    # Fetch tasks based on filters, search, and sort, excluding completed tasks
     query = f"""
         SELECT Task_ID, TaskName, TaskDesc, Priority, Ranking, TaskDeadline, Completed 
         FROM tasks 
-        WHERE User_ID = ? {search_clause} {filter_clause} {sort_query} 
+        WHERE User_ID = ? AND Completed = 'false' {search_clause} {filter_clause} {sort_query} 
         LIMIT ? OFFSET ?
     """
     parameters = (user_id, *search_values, tasks_per_page, offset)
 
     cursor.execute(query, parameters)
-
-    
-    #This puts all the tasks in the database for the user in the tasks tuple
     tasks = cursor.fetchall()
 
-    #This gets the total number of tasks to determine the number of pages
-    cursor.execute("SELECT COUNT(*) FROM tasks WHERE User_ID=?", (user_id,))
-    total_tasks = cursor.fetchone()[0]
+    # Get completed tasks separately for the side panel
+    cursor.execute(
+        """SELECT Task_ID, TaskName, TaskDesc, Priority, Ranking, TaskDeadline, Completed 
+           FROM tasks 
+           WHERE User_ID = ? AND Completed = 'true'
+        """, (user_id,)
+    )
+    completed_tasks = cursor.fetchall()
 
-    # Calculate total pages based on total tasks
+    # Calculate total number of tasks to determine number of pages
+    cursor.execute("SELECT COUNT(*) FROM tasks WHERE User_ID = ? AND Completed = 'false'", (user_id,))
+    total_tasks = cursor.fetchone()[0]
     total_pages = ceil(total_tasks / tasks_per_page) if total_tasks > 0 else 1
 
-    #This closes the connection to the database
+    # Close the connection to the database
     conn.close()
-
-    #This renders the dashboard with tasks and the page info
-    # return render_template('dashboard.html', name=user_name, tasks=tasks, page=page, total_pages=total_pages)
+    
+    # Render the dashboard with tasks, completed tasks, and pagination info
     return render_template(
         'dashboard.html', 
         name=user_name, 
-        tasks=tasks, 
+        tasks=tasks,                 # Only incomplete tasks
+        completed_tasks=completed_tasks,  # Only completed tasks for the panel
         page=page, 
         total_pages=total_pages, 
         search_query=search_query,
@@ -351,7 +356,7 @@ def update_task():
             # print(task_id)
             return render_template('update_task.html', task=task)
         else:
-            return dashboard()
+            return redirect(url_for('dashboard'))
 
 
 # This route handles the deletion of a task
@@ -380,7 +385,7 @@ def delete_task():
     finally:
         conn.close()
 
-    return dashboard()
+    return redirect(url_for('dashboard'))
 
 
 #This is a helper function that will fetch the users tasks
