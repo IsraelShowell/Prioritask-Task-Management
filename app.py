@@ -70,7 +70,7 @@ def signup():
 
         if username and password:
             # Check if email already exists
-            manage_cursor.execute("SELECT * FROM users WHERE Email = ?", (email,))
+            manage_cursor.execute("SELECT * FROM users WHERE Email = ? AND Username = ?", (email,username,))
             data = manage_cursor.fetchone()
 
             # If the email already exists, display an error message
