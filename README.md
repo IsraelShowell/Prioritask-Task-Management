@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Prioitask - Task Management
-# Version: 0.80
+# Version: 0.90
 
 # Description:
 This repository is for our senior design project from UMES, given to us in the Fall of 2024.
