@@ -1,52 +1,120 @@
 <!DOCTYPE html>
-<!--Israel Showell-->
+<!-- Israel Showell -->
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prioitask | Login & Sign Up</title>
     
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-	<!--Looks for the url of a css file that I will add in the future-->
-    <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='css/main.css') }}">
+    <!-- Internal CSS Styles -->
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap"
-      rel="stylesheet"/>
+        body {
+            font-family: 'Kumbh Sans', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #A0D6B4; /* Turquoise background */
+        }
 
-</head>
-<!DOCTYPE html>
-<!--Israel Showell-->
-<html lang="en">
+        /* Container for the login form */
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prioitask Login</title>
-	<!--Looks for the url of a css file that I will add in the future-->
-  <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='css/main.css') }}">
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap"
-      rel="stylesheet"/>
+        label {
+            display: block;
+            font-size: 14px;
+            margin-top: 15px;
+            color: #555;
+        }
 
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-submit:hover {
+            background-color: #45a049;
+        }
+
+        /* Additional links styling */
+        .form-links {
+            margin-top: 15px;
+        }
+
+        .form-links a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .form-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap" rel="stylesheet"/>
 </head>
 
 <body>
-<center>
-  <section class="login-section">
-	<h1>Welcome to the Prioitask Login Page!</h1>
-	<form class="login-form" action="{{ url_for('login') }}" method="POST">
-		<p>Username:<input type="text" name="Username"/></p>
-		<p>Password:<input type="password" name="Password"/></p>
-		<p><input type="submit" name="enter"/></p>
-	</form>
-  <!--Looks for the Home function in the app.py script-->
-  <h4><a href="{{ url_for('Home') }}"><strong>Go Home</strong></a></h4>
-  <!--Looks for the Reset Password function in the app.py script-->
-	<p><a href="{{ url_for('reset_password') }}"><strong>Reset Password</strong></a></p>
-	<!--Looks for the signup function in the app.py script-->
-	<p><a href="{{ url_for('signup') }}"><strong>Sign Up</strong></a></p>
-  </section>
-</center>
+    <div class="container">
+        <!-- Login Section -->
+        <section class="login-section">
+            <h1>Welcome to Prioitask!</h1>
+            <form class="login-form" action="{{ url_for('login') }}" method="POST">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="Username" required>
+                
+                <label for="password">Password</label>
+                <input type="password" id="password" name="Password" required>
+                
+                <button type="submit" class="btn-submit">Login</button>
+            </form>
+
+            <!-- Additional Links -->
+            <div class="form-links">
+                <p><a href="{{ url_for('reset_password') }}">Forgot Password?</a></p>
+                <p>New to Prioitask? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+                <p><a href="{{ url_for('Home') }}">Go Home</a></p>
+            </div>
+        </section>
+    </div>
 </body>
 </html>
+
+   

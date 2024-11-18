@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Prioitask - Task Management Application
-# Version: 0.80
+# Version: 0.90
 
 # Description:
 """

@@ -1,31 +1,95 @@
 <!DOCTYPE html>
-<!--Israel Showell-->
+<!-- Israel Showell -->
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ERROR</title>
-
-	<!--Looks for the url of a css file that I will add in the future-->
-    <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='css/main.css') }}">
+    <title>Error | Prioitask</title>
     
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap"
-      rel="stylesheet"/>
+    <!-- Internal CSS -->
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Kumbh Sans', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #A0D6B4; /* Turquoise background for consistency */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #D32F2F; /* Error red */
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-<center>
-   <form action="{{ url_for('Home') }}" method='POST'>
-   <h1 style='text-align: center; color: pink; font-size: 50px;'> This email already is registered! Try again with a new email!</h1>
-   <!--Looks for the Home function in the app.py script-->
-   <p><a href="{{ url_for('Home') }}"><strong>Home</strong></a></p>
-   <!--Looks for the registrationForm function in the app.py script-->
-   <p><a class="anchor-button" href="{{ url_for('signup') }}"><strong>Sign Up</strong></a></p>
-   <!--Looks for the login function in the app.py script-->
-   <p><a href="{{ url_for('login') }}"><strong>Login</strong></a></p>
-</center>
+    <div class="container">
+        <h1>Email Already Registered</h1>
+        <p>The email you entered is already in use. Please try again with a different email address.</p>
+        <div class="btn-group">
+            <div class="btn"><a href="{{ url_for('Home') }}">Home</a></div>
+            <div class="btn"><a href="{{ url_for('signup') }}">Sign Up</a></div>
+            <div class="btn"><a href="{{ url_for('login') }}">Login</a></div>
+        </div>
+    </div>
 </body>
 </html>

@@ -5,9 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Management Dashboard</title>
-    <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 
     <style>
+        /* Fading blue background styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #87CEFA, #FFFFFF);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
         /* Styling for the completed tasks panel */
         #completedTasksPanel {
             position: fixed;
@@ -21,7 +32,7 @@
             transition: left 0.3s ease;
             padding: 15px;
         }
-    
+
         /* Button to toggle panel visibility - centered on the panel edge */
         #togglePanelButton {
             position: fixed;
@@ -37,7 +48,29 @@
             z-index: 1000;
         }
 
-        ul{
+        h1, h2, h3, p, label {
+            color: #333;
+            text-align: center;
+        }
+
+        /* General styling for buttons */
+        button, a {
+            padding: 8px 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Hover effects for buttons */
+        button:hover, a:hover {
+            background-color: #6d3e82;
+        }
+
+        ul {
             list-style-type: none;
         }
     </style>
@@ -51,8 +84,6 @@
             <p><strong>Welcome, {{ name }}!</strong></p>
             <h4><a href="{{ url_for('Home') }}"><strong>Logout</strong></a></h4>
         </section>
-
-
 
         <form method="POST" action="{{ url_for('dashboard') }}">
             <h3>Create a New Task</h3>
@@ -80,8 +111,6 @@
             <button type="submit">Add Task</button>
         </form>
 
-
-        <!-- For each task, its information will be printed out, and there will be a complete button beside it!-->
         <h2>Your Tasks</h2>
         <ul>
             {% for task in tasks %}
@@ -89,7 +118,6 @@
                     <strong>{{ task[1] }}</strong>: {{ task[2] }}<br>
                     Priority: {{ task[3] }} | Ranking: {{ task[4] }} | Deadline: {{ task[5] }}
                     
-                    <!-- Display a check mark if the task is completed -->
                     {% if task[6] == 'true' %}
                         ✓ <!-- Completed task check mark -->
                     {% endif %}
@@ -102,21 +130,15 @@
                 <form method="POST" action="{{ url_for('dashboard') }}">
                     <button type="submit" name="complete_task" value="{{ task[0] }}">Mark as Complete</button>
                 </form>
-                {% else %}
-                <!--<form method="POST" action="{{ url_for('dashboard') }}">
-                    <button type="submit" name="complete_task" value="{{ task[0] }}">Mark as Incomplete</button>
-                </form>-->
                 {% endif %}
             {% endfor %}
         </ul>
 
-        <!-- Adds a search form -->
         <form method="GET" action="{{ url_for('dashboard', name=name, page=1) }}">
             <input type="text" name="search" value="{{ search_query }}" placeholder="Search tasks...">
             <button type="submit">Search</button>
         </form>
-        
-        <!-- Adds sorting options -->
+
         <form method="GET" action="{{ url_for('dashboard', name=name, page=1) }}">
             <select name="sort_by">
                 <option value="Priority" {% if sort_by == 'Priority' %}selected{% endif %}>Priority</option>
@@ -135,9 +157,7 @@
             </select>
             <button type="submit">Sort</button>
         </form>
-        
-        
-        <!-- Add filtering options -->
+
         <form method="GET" action="{{ url_for('dashboard', name=name, page=1) }}">
             <select name="filter">
                 <option value="all" {% if completed_filter == 'all' %}selected{% endif %}>All Tasks</option>
@@ -145,7 +165,6 @@
                 <option value="incomplete" {% if completed_filter == 'incomplete' %}selected{% endif %}>Incomplete Tasks</option>
             </select>
     
-            <!-- Dropdown for Priority Filtering -->
             <select name="priority_filter">
                 <option value="all">All Priorities</option>
                 <option value="Important-Urgent">Important-Urgent</option>
@@ -157,8 +176,6 @@
             <button type="submit">Filter</button>
         </form>
        
-        
-        <!--Code for task pages-->
         <div class="pagination">
             {% if page > 1 %}
                 <a href="{{ url_for('dashboard', name=name, page=page-1, search=search_query, sort_by=sort_by, sort_order=sort_order, filter=completed_filter, priority_filter=priority_filter) }}">Previous</a>
@@ -170,7 +187,6 @@
         </div>
         
         <button id="togglePanelButton" onclick="toggleCompletedTasks()">➔</button>
-        <!-- Completed Tasks Panel -->
         <div id="completedTasksPanel">
             <h2>Completed Tasks</h2>
             <ul>
@@ -187,7 +203,6 @@
             </ul>
         </div>
         
-        <!--Script for completed tasks panel-->
         <script>
             function toggleCompletedTasks() {
                 var panel = document.getElementById("completedTasksPanel");
@@ -195,23 +210,14 @@
         
                 if (panel.style.left == "-300px") {
                     panel.style.left = "10px";
-                    button.style.left = "340px"; // Adjusts button to this position when panel is open
+                    button.style.left = "340px";
                     button.textContent = "←";
                 } else {
                     panel.style.left = "-300px";
-                    button.style.left = "30px"; // Adjusts button to this position when panel is closed
+                    button.style.left = "30px";
                     button.textContent = "➔";
                 }
             }
-        </script>
-
-        <!--Script for confirming deletion of tasks-->
-        <script>
-            // Function to confirm deletion
-             
-            /*If the user clicks confirm, confirm() returns true, allowing the deletion action to proceed. 
-            If the user clicks cancels, confirm() returns false, preventing the link's default behavior.
-            */
 
             function confirmDeleteTask() {
                 return confirm("Are you sure you want to delete this task?");
@@ -222,3 +228,4 @@
 </body>
 
 </html>
+

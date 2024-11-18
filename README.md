@@ -85,7 +85,14 @@ In order to run this program follow the steps below;
 - Completed tasks are no longer appear on the regular dashboard portion of the application <br>
 - During registration and resetting a password, the user's password is checked for its strength before adding or updating the information into the database <br>
 
-# Current Features as of V-0.80:
+
+# Version History:
+# V-0.90: (11-18-24)
+# Contributors: Israel Showell, Byronous Robinson, Christopher Turnbull, Jerome Foster, Kaleigha Hayes, Steker Jean Francois
+- Updated UI element of the Home, Error, Login, and Dashboard 
+- Merged changes into the production version of the application
+
+# Current Features as of V-0.90:
 - Version 0.80 is an internal development version, the official release version will be 1.00!
 
 # Future Features to Implement:
