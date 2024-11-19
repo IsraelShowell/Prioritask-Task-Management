@@ -5,68 +5,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prioitask Signup</title>
+    <title>Prioritask Register</title>
 
-	<!--Looks for the url of a css file that I will add in the future-->
-	<link rel="stylesheet" type=text/css href="{{ url_for('static', filename='css/main.css') }}">
-
+    <!-- Google Fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap"
-      rel="stylesheet"/>
+        href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap"
+        rel="stylesheet" />
 
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Kumbh Sans', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #A0D6B4; /* Turquoise background */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: red;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: left;
+        }
+
+        label {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        button {
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            font-size: 14px;
+            color: #777;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        #password-strength {
+            font-size: 14px;
+            margin-top: -10px;
+            color: #555;
+        }
+
+        #password-strength.weak {
+            color: red;
+        }
+
+        #password-strength.medium {
+            color: orange;
+        }
+
+        #password-strength.strong {
+            color: green;
+        }
+    </style>
 </head>
 
 <body>
-<!--
-This snippet creates a registration form for a PingPong Tournament,
-displaying errors for each field if present,
-and includes inputs for email, username, password, phone number, gender, address, and age.
--->
-   <h1 style='text-align: center; color: red; font-size: 25px;'>Signup Form </h1>
-<center>
-   {% for message in form.Email.errors%}
-   <div{{message}}</div>
-   {%endfor%}
-   {% for message in form.Username.errors%}
-   <div{{message}}</div>
-   {%endfor%}
+    <div class="container">
+        <h1>Account Information</h1>
 
-   {% for message in form.Password.errors%}
-   <div{{message}}</div>
-   {%endfor%}
+        {% for message in form.Email.errors %}
+        <div>{{ message }}</div>
+        {% endfor %}
+        {% for message in form.Username.errors %}
+        <div>{{ message }}</div>
+        {% endfor %}
+        {% for message in form.Password.errors %}
+        <div>{{ message }}</div>
+        {% endfor %}
 
-   <form action="{{ url_for('signup') }}" method='post'>
+        <form action="{{ url_for('signup') }}" method='post'>
+            {{ form.hidden_tag() }}
 
-		{{form.hidden_tag() }}
+            <label for="Email">Email:</label>
+            {{ form.Email }}
 
-	<div class="table-section">
+            <label for="Username">Username:</label>
+            {{ form.Username }}
 
-		<table>
-			<tr>
-				<td>{{form.Email.label}}</td>
-				<td>{{form.Email}}</td>
-			</tr>
-			<tr>
-				<td>{{form.Username.label}}</td>
-				<td>{{form.Username}}</td>
-			</tr>
-			<tr>
-				<td>{{form.Password.label}}</td>
-				<td>{{form.Password}}</td>
-			</tr>
-			
-			<tr>
-				<td></td>
-				<td>{{form.Submit(class="anchor-button")}}</td>
-			</tr>
-		</table>
-		<p>Your password must be 8 characters long, contain 1 number and 1 special character! <br> Otherwise, the app will not register your information!</p>
-	</div>
+            <label for="Password">Password:</label>
+            <input type="password" id="Password" name="Password" required oninput="checkPasswordStrength()">
+            <div id="password-strength">Password strength: </div>
 
-	<!--Looks for the Home function in the app.py script-->
-	<p><a href="{{ url_for('Home') }}"><strong>Home</strong></a></p>
-	<!--Looks for the login function in the app.py script-->
-	<p><a href="{{ url_for('login') }}"><strong>Login</strong></a></p>
-</center>
+            <button type="submit">Sign Up</button>
+        </form>
+
+        <p>Your password must be 8 characters long, contain 1 number and 1 special character! <br> Otherwise, the app will not register your information!</p>
+
+        <p><a href="{{ url_for('Home') }}"><strong>Home</strong></a></p>
+        <p><a href="{{ url_for('login') }}"><strong>Login</strong></a></p>
+    </div>
+
+    <script>
+        function checkPasswordStrength() {
+            const passwordInput = document.getElementById('Password').value;
+            const strengthIndicator = document.getElementById('password-strength');
+            let strength = '';
+
+            if (passwordInput.length < 8) {
+                strength = 'weak';
+            } else if (/[0-9]/.test(passwordInput) && /[!@#$%^&*(),.?":{}|<>]/.test(passwordInput)) {
+                strength = 'strong';
+            } else {
+                strength = 'medium';
+            }
+
+            strengthIndicator.textContent = `Password strength: ${strength}`;
+            strengthIndicator.className = strength;
+        }
+    </script>
 </body>
+
 </html>

@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Prioitask - Task Management Application
-# Version: 0.90
+# Version: 0.95
 
 # Description:
 """
@@ -13,11 +13,18 @@ The programming for this project was begun September 27th 2024 and was finished 
 """
 
 #These are the imported libaries I am using to make the program
-from flask import Flask, render_template, request, flash, session, redirect, url_for
+from flask import Flask, render_template, request, flash, session, redirect, url_for, jsonify
+import re  # Regular expressions for password validations
 from signupForm import signUpForm
 from datetime import datetime
 from math import ceil
 import sqlite3
+from huggingface_hub import InferenceClient
+import json
+import os
+from huggingface_hub import login
+
+
 
 
 #Important variables and objects
@@ -28,8 +35,102 @@ app=Flask(__name__)
 #(Cross-Site Request Forgery)
 app.secret_key="__privatekey__"
 
+#Defines the Hugging Face model that will be used (TinyLlama in this case)
+os.environ['HF_TOKEN'] = "your-hugging-token"
+login(token="your-hugging-token-again")
+
+
+repo_id = "microsoft/Phi-3.5-mini-instruct"
+
+# Initialize the InferenceClient
+llm_client = InferenceClient(
+    model=repo_id,
+    timeout=120,
+)
+
 
 #All HTML files are located in the 'templates' because that is where render_template looks for HTML files
+@app.route('/ask_taski', methods=['POST'])
+def ask_taski():
+    
+    data = request.json
+    task = data.get('task', {})  # Now assumes a single task dictionary
+    query = data.get('question', '')
+
+    print(data)  # Debugging the incoming JSON payload
+    print(type(data))  # Ensure it's a dictionary
+
+    print(task) #Prints out all of the task information
+    print(type(task)) #List
+    
+    print(query) #Prints out selected query
+    print(type(query)) #String
+    
+    #This calls the taski function and returns the AI's response
+    response = Taski(task, query)
+
+    return jsonify({'response': response})
+
+
+
+# Function to call the model and generate a response
+def call_llm(inference_client: InferenceClient, prompt: str):
+    try:
+        response = inference_client.post(
+            json={
+                "inputs": prompt,
+                "parameters": {
+                    "max_new_tokens": 125,
+                    "temperature": 0.2,
+                    "top_p": 0.8,
+                },
+                "task": "text-generation",
+            },
+        )
+        # Decode and parse the response
+        generated_text = json.loads(response.decode())[0]["generated_text"]
+        
+        #Splits at "Response:" to extract only the relevant part
+        if "Response:" in generated_text:
+            return generated_text.split("Response:", 1)[1].strip()
+        return generated_text.strip()  # Fallback if no marker found
+    except Exception as e:
+        print(f"Error in LLM call: {e}")
+        return "Error in generating response."
+#End of Call_LLM function
+
+def Taski(task, query):
+    # Extracting task details
+    task_name = task[1]
+    task_desc = task[2]
+    task_priority = task[3]
+    task_ranking = task[4]
+    task_deadline = task[5]
+    task_completed = task[6]
+
+    # Create the prompt with a clear marker
+    prompt = f"""
+    Task Name: {task_name}
+    Description: {task_desc}
+    Priority: {task_priority}
+    Ranking: {task_ranking}
+    Deadline: {task_deadline}
+    Completed: {task_completed}
+
+    Please respond friendly, briefly, and directly to the following query:
+    Query: {query}
+    
+    Make sure to consider the task's name and description in your response!
+    Response:
+    """
+
+    # Call the LLM and get only the response
+    response = call_llm(llm_client, prompt)
+    return response or "No valid response generated."
+#End of Taski function
+
+
+
 
 #The Home Page is located as the root of the web page
 @app.route('/')
@@ -41,12 +142,6 @@ def Home():
 
 #The signup Page is able to detect POST and GET requests
 #POST sends data, GET gets data
-from flask import render_template, request, redirect, url_for, flash
-import re  # Regular expressions for password validation
-from datetime import datetime
-
-
-
 #This route is used to connect the user to the registration page
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():

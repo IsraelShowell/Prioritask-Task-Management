@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: /2024
 # Project: Prioitask - Task Management
-# Version: 0.90
+# Version: 0.95
 
 # Description:
 This repository is for our senior design project from UMES, given to us in the Fall of 2024.
@@ -89,16 +89,22 @@ In order to run this program follow the steps below;
 # Version History:
 # V-0.90: (11-18-24)
 # Contributors: Israel Showell, Byronous Robinson, Christopher Turnbull, Jerome Foster, Kaleigha Hayes, Steker Jean Francois
-- Updated UI element of the Home, Error, Login, and Dashboard 
+- Updated UI elements of the Home, Error, Login, and Dashboard 
 - Merged changes into the production version of the application
 
-# Current Features as of V-0.90:
-- Version 0.80 is an internal development version, the official release version will be 1.00!
+# Version History:
+# V-0.95: (11-19-24)
+# Contributors: Israel Showell, Byronous Robinson, Christopher Turnbull, Jerome Foster, Kaleigha Hayes, Steker Jean Francois
+- Updated UI elements of the Sign Up and Dashboard 
+- Implemented AI into the Dashboard using Hugging Face
+- Merged changes into the production version of the application
+
+# Current Features as of V-0.95:
+- Version 0.95 is an internal development version, the official release version will be 1.00!
 
 # Future Features to Implement:
 - Task managemnt functions such as adding, editing, deleting, etc - Done!
 - Get the web application working online with the database - Done!
-- Profile management functions such as setting a new password and changing a username
 - UI and UX needs to be implemented to streamline the web application - In progress!
 
 # Known/Possible Bugs:
