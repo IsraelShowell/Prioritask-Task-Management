@@ -96,6 +96,95 @@
             text-align: center;
         }
         
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+            background: linear-gradient(to bottom, #FAFFFF, #87CEFA);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+    
+        .form-container h3 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+    
+        .form-container label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    
+        .form-container input,
+        .form-container textarea,
+        .form-container select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 100%;
+        }
+    
+        .form-container textarea {
+            resize: vertical;
+        }
+    
+        .form-container button {
+            padding: 6px 10px;
+            font-size: 0.9rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+    
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+    
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+        }
+    
+        .task-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: linear-gradient(to bottom, #87CEFA, #FFFFFF);
+        }
+    
+        .task-item a {
+            font-size: 0.9rem;
+            color: white;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+    
+        .task-item a:hover {
+            text-decoration: underline;
+        }
+    
+        .complete-task-form button {
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    
+        .complete-task-form button:hover {
+            background-color: #007BA7;
+        }
     </style>
 
 </head>
@@ -108,36 +197,36 @@
             <h4><a href="{{ url_for('Home') }}"><strong>Logout</strong></a></h4>
         </section>
 
-        <form method="POST" action="{{ url_for('dashboard') }}">
+        <form method="POST" action="{{ url_for('dashboard') }}" class="form-container">
             <h3>Create a New Task</h3>
             <label for="TaskName">Task Name:</label>
-            <input type="text" name="TaskName" placeholder="Task Name" required><br>
-
+            <input type="text" name="TaskName" placeholder="Task Name" required>
+        
             <label for="TaskDesc">Task Description:</label>
-            <textarea name="TaskDesc" placeholder="Task Description" required></textarea><br>
-
-            <!-- Dropdown for Priority -->
+            <textarea name="TaskDesc" placeholder="Task Description" required></textarea>
+        
             <label for="Priority">Task Priority:</label>
             <select name="Priority" required>
                 <option value="Important-Urgent">Important-Urgent</option>
                 <option value="Important-Not-Urgent">Important-Not-Urgent</option>
                 <option value="Not-Important-Urgent">Not-Important-Urgent</option>
                 <option value="Not-Important-Not-Urgent">Not-Important-Not-Urgent</option>
-            </select><br>
-
-            <!-- Ranking Field -->
+            </select>
+        
             <label for="Ranking">Task Ranking (5-Highest and 1-Lowest):</label>
-            <input type="number" name="Ranking" min="1" max="5" placeholder="Ranking (1-5)" required><br>
-
+            <input type="number" name="Ranking" min="1" max="5" placeholder="Ranking (1-5)" required>
+        
             <label for="Deadline">Task Deadline:</label>
-            <input type="date" name="Deadline" required><br>
+            <input type="date" name="Deadline" required>
+        
             <button type="submit">Add Task</button>
         </form>
-
+        
+        <!-- Task List -->
         <h2>Your Tasks</h2>
-        <ul>
+        <ul class="task-list">
             {% for task in tasks %}
-                <li>
+                <li class="task-item">
                     <strong>{{ task[1] }}</strong>: {{ task[2] }}<br>
                     Priority: {{ task[3] }} | Ranking: {{ task[4] }} | Deadline: {{ task[5] }}
                     
@@ -148,10 +237,10 @@
                     <a href="{{ url_for('update_task', task_id=task[0]) }}">Edit</a> |
                     <a href="{{ url_for('delete_task', task_id=task[0]) }}" onclick="return confirmDeleteTask()">Delete</a>
                     <a href="javascript:void(0);" onclick="toggleAIChatPanel(this)" data-task='{{ task | tojson }}'>Ask Taski</a>
-
+        
                 </li>
                 {% if task[6] == 'false' %}
-                <form method="POST" action="{{ url_for('dashboard') }}">
+                <form method="POST" action="{{ url_for('dashboard') }}" class="complete-task-form">
                     <button type="submit" name="complete_task" value="{{ task[0] }}">Mark as Complete</button>
                 </form>
                 {% endif %}
@@ -282,7 +371,7 @@
                     panel.style.right = "0px"; // Show the sidebar
                     toggleButton.textContent = "←"; // Change the button to the left arrow
                     aiResponse.innerHTML = "<p>Loading...</p>"; // Show a loading message
-                    // Optional: You can fetch AI response here if required
+                    
                 } else {
                     panel.style.right = "-330px"; // Hide the sidebar
                     toggleButton.textContent = "➔"; // Change the button back to the right arrow

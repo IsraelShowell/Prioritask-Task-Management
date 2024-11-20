@@ -36,8 +36,8 @@ app=Flask(__name__)
 app.secret_key="__privatekey__"
 
 #Defines the Hugging Face model that will be used (TinyLlama in this case)
-os.environ['HF_TOKEN'] = "your-hugging-token"
-login(token="your-hugging-token-again")
+os.environ['HF_TOKEN'] = "your-token"
+login(token="your-token")
 
 
 repo_id = "microsoft/Phi-3.5-mini-instruct"
@@ -428,11 +428,12 @@ def update_task():
     cursor = conn.cursor()
 
     if request.method == 'POST':
+          
         # Retrieve the form data
         task_name = request.form.get('TaskName')
         task_desc = request.form.get('TaskDesc')
         priority = request.form.get('Priority')
-        ranking = int(request.form.get('Ranking'))
+        ranking = request.form.get('Ranking')
         deadline = request.form.get('Deadline')
 
         # Ensure all fields contain data
@@ -444,10 +445,13 @@ def update_task():
                     (task_name, task_desc, priority, ranking, deadline, task_id, user_id)
                 )
                 conn.commit()
+                
                 conn.close()
                 # print(task_id)
+                
                 #Redirects back to the dashboard
                 return redirect(url_for('dashboard'))
+            
             except Exception as e:
                 conn.rollback()
                 return render_template('update_task.html', task_id=task_id, error=f"Error updating task: {e}")
