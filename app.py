@@ -37,9 +37,10 @@ app.secret_key="__privatekey__"
 
 #Defines the Hugging Face model that will be used (TinyLlama in this case)
 os.environ['HF_TOKEN'] = "your-token"
-login(token="your-token")
+login(token="your-token-again")
 
 
+#Change this to use a different model
 repo_id = "microsoft/Phi-3.5-mini-instruct"
 
 # Initialize the InferenceClient
@@ -80,7 +81,7 @@ def call_llm(inference_client: InferenceClient, prompt: str):
             json={
                 "inputs": prompt,
                 "parameters": {
-                    "max_new_tokens": 125,
+                    "max_new_tokens": 185,
                     "temperature": 0.2,
                     "top_p": 0.8,
                 },
@@ -433,9 +434,11 @@ def update_task():
         task_name = request.form.get('TaskName')
         task_desc = request.form.get('TaskDesc')
         priority = request.form.get('Priority')
-        ranking = request.form.get('Ranking')
-        deadline = request.form.get('Deadline')
-
+        ranking = request.form.get('ranking')
+        deadline = request.form.get('deadline')
+        print("Data from form: ")
+        print(task_name, task_desc, priority, ranking, deadline)
+        
         # Ensure all fields contain data
         if all([task_name, task_desc, priority, ranking, deadline]):
             try:
@@ -454,7 +457,15 @@ def update_task():
             
             except Exception as e:
                 conn.rollback()
-                return render_template('update_task.html', task_id=task_id, error=f"Error updating task: {e}")
+                # Pre-fetch the task to pass back to the template
+                cursor.execute(
+                    """SELECT TaskName, TaskDesc, Priority, Ranking, TaskDeadline 
+                    FROM tasks WHERE Task_ID = ? AND User_ID = ?""",
+                (task_id, user_id)
+                )
+                task = cursor.fetchone()
+                return render_template('update_task.html', task=task, error=f"Error updating task: {e}")
+            
         else:
             return render_template('update_task.html', task_id=task_id, error="All fields are required.")
     else:

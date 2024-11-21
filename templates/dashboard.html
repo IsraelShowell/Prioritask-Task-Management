@@ -81,9 +81,9 @@
         #aiChatPanel {
             position: fixed;
             background: linear-gradient(to bottom, #87CEFA, #FFFFFF);
-            right: -330px; /* Initially hidden */
+            right: -430px; /* Initially hidden */
             top: 0;
-            width: 300px;
+            width: 400px;
             height: 100%;
             background-color: #f9f9f9;
             box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
@@ -322,9 +322,9 @@
             <div id="aiResponse">
                 <p>Choose a question or type your own:</p>
                 <ul>
-                    <li><button onclick="askAI('What is the best way to finish this task?')">What is the best way to finish this task?</button></li>
-                    <li><button onclick="askAI('How can I complete this task more efficiently?')">How can I complete this task efficiently?</button></li>
-                    <li><button onclick="askAI('Are there similar tasks I can reference?')">Are there similar tasks I can reference?</button></li>
+                    <li><button onclick="askAI('In clearly defined, structured, and detailed steps, please tell me the best way to finish this task? Break each step off into it's own line!')">What is the best way to finish this task?</button></li>
+                    <li><button onclick="askAI('In clearly defined and detailed steps, how can I complete this task more efficiently? Break each step off into it's own line!')">How can I complete this task efficiently?</button></li>
+                    <li><button onclick="askAI('In clearly defined and detailed points, are there similar tasks I can reference to help me complete this task? Break each point off into it's own line!')">Are there similar tasks I can reference?</button></li>
                 </ul>
                 <input type="text" id="customQuery" placeholder="Type your question here">
                 <button onclick="askAI(document.getElementById('customQuery').value)">Ask</button>
@@ -367,13 +367,13 @@
                 currentTask = JSON.parse(link.getAttribute('data-task')); // Parse the task data passed to the link
 
                 // Toggle the sidebar
-                if (panel.style.right === "-330px") {
+                if (panel.style.right === "-430px") {
                     panel.style.right = "0px"; // Show the sidebar
                     toggleButton.textContent = "←"; // Change the button to the left arrow
                     aiResponse.innerHTML = "<p>Loading...</p>"; // Show a loading message
                     
                 } else {
-                    panel.style.right = "-330px"; // Hide the sidebar
+                    panel.style.right = "-430px"; // Hide the sidebar
                     toggleButton.textContent = "➔"; // Change the button back to the right arrow
                     aiResponse.innerHTML = ""; // Clear the AI response
                     currentTask = null; // Clear selected task information
