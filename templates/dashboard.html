@@ -185,6 +185,30 @@
         .complete-task-form button:hover {
             background-color: #007BA7;
         }
+
+
+        /* Media query for smaller screens */
+        @media screen and (max-width: 760px) {
+            .task-item a, 
+            .task-item button, 
+            .complete-task-form button {
+                display: inline; /* Display as inline text */
+                padding: 0; /* Remove padding */
+                font-size: 0.9rem; /* Adjust font size */
+                background-color: transparent; /* Remove background */
+                color: #007bff; /* Match link color */
+                border: none; /* Remove border */
+                text-decoration: underline; /* Add underline for link appearance */
+                cursor: pointer; /* Keep pointer cursor for interactivity */
+            }
+    
+            .task-item a:hover, 
+            .task-item button:hover, 
+            .complete-task-form button:hover {
+                text-decoration: none; /* Optionally remove underline on hover */
+                color: #0056b3; /* Darken color on hover */
+            }
+        }
     </style>
 
 </head>
@@ -222,30 +246,44 @@
             <button type="submit">Add Task</button>
         </form>
         
-        <!-- Task List -->
-        <h2>Your Tasks</h2>
-        <ul class="task-list">
-            {% for task in tasks %}
-                <li class="task-item">
-                    <strong>{{ task[1] }}</strong>: {{ task[2] }}<br>
-                    Priority: {{ task[3] }} | Ranking: {{ task[4] }} | Deadline: {{ task[5] }}
-                    
-                    {% if task[6] == 'true' %}
-                        ✓ <!-- Completed task check mark -->
-                    {% endif %}
-                    
-                    <a href="{{ url_for('update_task', task_id=task[0]) }}">Edit</a> |
-                    <a href="{{ url_for('delete_task', task_id=task[0]) }}" onclick="return confirmDeleteTask()">Delete</a>
-                    <a href="javascript:void(0);" onclick="toggleAIChatPanel(this)" data-task='{{ task | tojson }}'>Ask Taski</a>
-        
-                </li>
+        <!-- Task List in Tabular Format -->
+<h2>Your Tasks</h2>
+<table border="1" cellspacing="0" cellpadding="10" style="width: 100%; text-align: left; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th>Task Name</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Ranking</th>
+            <th>Deadline</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td><strong>{{ task[1] }}</strong></td>
+            <td>{{ task[2] }}</td>
+            <td>{{ task[3] }}</td>
+            <td>{{ task[4] }}</td>
+            <td>{{ task[5] }}</td>
+            <td>{% if task[6] == 'true' %}✓{% else %}Incomplete{% endif %}</td>
+            <td>
+                <a href="{{ url_for('update_task', task_id=task[0]) }}" class="task-item">Edit</a> |
+                <a href="{{ url_for('delete_task', task_id=task[0]) }}" class="task-item" onclick="return confirmDeleteTask()">Delete</a> |
+                <a href="javascript:void(0);" class="task-item" onclick="toggleAIChatPanel(this)" data-task='{{ task | tojson }}'>Ask Taski</a>
                 {% if task[6] == 'false' %}
-                <form method="POST" action="{{ url_for('dashboard') }}" class="complete-task-form">
+                <form method="POST" action="{{ url_for('dashboard') }}" class="complete-task-form" style="display:inline;">
                     <button type="submit" name="complete_task" value="{{ task[0] }}">Mark as Complete</button>
                 </form>
                 {% endif %}
-            {% endfor %}
-        </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 
         <form method="GET" action="{{ url_for('dashboard', name=name, page=1) }}">
             <input type="text" name="search" value="{{ search_query }}" placeholder="Search tasks...">
