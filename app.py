@@ -487,17 +487,16 @@ def update_task():
             return redirect(url_for('dashboard'))
 
 
-# This route handles the deletion of a task
+#This route handles the deletion of a task
 @app.route('/delete_task', methods=['GET'])
 def delete_task():
-    # Get the task ID from query parameters
+    #This retrives the task ID from query parameters
     task_id = request.args.get('task_id')
-
-    # Retrieve the user ID from the session
+    #Retrieves the user ID from the session
     user_id = session.get('user_id')
+    #This ensured that the user is logged in
     if not user_id:
         return render_template('dashboard.html', error="You must be logged in.")
-
     try:
         # Connect to the database and delete the task
         conn = sqlite3.connect('task-management.db')
@@ -507,12 +506,14 @@ def delete_task():
             (task_id, user_id)
         )
         conn.commit()
+        #In case the task is unable to be deleted for any reason
     except Exception as e:
         print(f"Error occurred: {e}")
         return render_template('dashboard.html', error="Failed to delete task.")
     finally:
+        #Closes the connection to the server
         conn.close()
-
+    #At the end of the process, the user is guided back to the dashboard
     return redirect(url_for('dashboard'))
 
 
