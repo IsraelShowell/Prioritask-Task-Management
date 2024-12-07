@@ -27,7 +27,12 @@ In order to run this program follow the steps below;
 - Run: flask app.py
 
 # Contributor Roles: 
- - Israel Showell; Full Stack-Developer, Database and Server Manager; Implemented the Back-End, the bare bones Front-End, Database schema and implementation, and Server hosting via PythonAnywhere
+ - Israel Showell; Project Manager, Full-Stack (Front-End & Back-End) Developer, Tester, Database Manager & Designer, Server Manager, & Cl/CD (Deployment) Pipeline Manager, Documentation, Diagram Designer.
+
+ - Byronous Mario Fritz-Gerald Robinson II; Front-End Developer, Documentation, Tester, Diagram Designer
+
+ Christopher Turnbull, Kaleigha Hayes, Jerome Foster, Steker Jean Francois; Front-End Developer,  Documentation, Tester
+
 
 
 # Version History:
@@ -99,13 +104,24 @@ In order to run this program follow the steps below;
 - Implemented AI into the Dashboard using Hugging Face
 - Merged changes into the production version of the application
 
-# Current Features as of V-0.95:
-- Version 0.95 is an internal development version, the official release version will be 1.00!
+
+# Version History:
+# V-1.00: (12-7-24)
+# Contributors: Israel Showell, Byronous Robinson, Christopher Turnbull, Jerome Foster, Kaleigha Hayes, Steker Jean Francois
+- Updated UI elements of the Sign Up and Dashboard 
+- Add FAQ page to assist users in using the application
+
+
+# Current Features as of V-1.00:
+- Users can create accounts and reset their password
+- Users can create, edit, delete, sort, search, and filter tasks
+- Users can ask for helpful information about their tasks via our AI-powered chatbot
 
 # Future Features to Implement:
 - Task managemnt functions such as adding, editing, deleting, etc - Done!
 - Get the web application working online with the database - Done!
-- UI and UX needs to be implemented to streamline the web application - In progress!
+- UI and UX needs to be implemented to streamline the web application - Done!
+- AI chatbot needs to be implemented - Done!
 
 # Known/Possible Bugs:
 - No errors.....yet (Israel)

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management Dashboard FAQ</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #87CEFA, #FFFFFF);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1, h2, p {
+            color: #333;
+            text-align: center;
+        }
+
+        .faq-container {
+            width: 80%;
+            max-width: 800px;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+        }
+
+        .faq-item h3 {
+            font-size: 1.25rem;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .faq-item p {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        button, a {
+            padding: 8px 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover, a:hover {
+            background-color: #6d3e82;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="faq-container">
+        <h1>Frequently Asked Questions (FAQ)</h1>
+
+        <div class="faq-item">
+            <h3>1. How do I create a new task?</h3>
+            <p>To create a new task, fill out the "Task Name", "Task Description", "Priority", "Task Ranking", and "Task Deadline" fields in the form provided. Once all fields are completed, click the "Add Task" button to save the task.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>2. How can I edit an existing task?</h3>
+            <p>To edit an existing task, click the "Edit" link next to the task you want to modify. You will be able to update the task details and save the changes.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>3. How do I mark a task as complete?</h3>
+            <p>To mark a task as complete, click the "Mark as Complete" button next to the task. Once completed, the task status will change to "✓" and no longer be listed under incomplete tasks.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>4. How can I delete a task?</h3>
+            <p>To delete a task, click the "Delete" link next to the task. A confirmation prompt will appear to ensure that you want to delete the task. If confirmed, the task will be removed from your list.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>5. How do I search for tasks?</h3>
+            <p>You can search for tasks using the search bar at the top of the page. Enter keywords related to the task name or description and click the "Search" button to filter tasks accordingly.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>6. How can I sort the tasks?</h3>
+            <p>You can sort tasks by "Priority", "Task Name", "Task Deadline", or "Date Created" using the sorting dropdown. Select the criteria you want to sort by and choose the order (ascending or descending), then click "Sort" to update the list.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>7. How can I filter tasks based on status or priority?</h3>
+            <p>Use the filtering options to display tasks based on their status (completed or incomplete) or priority (all priorities, Important-Urgent, etc.). Choose the appropriate options from the dropdowns and click "Filter" to see the updated list.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>8. What is the "Ask Taski" feature?</h3>
+            <p>The "Ask Taski" feature allows you to ask a virtual assistant for help with a task. Click on the "Ask Taski" link next to any task to start the conversation. Taski will assist you with task-related queries.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>9. How do I log out?</h3>
+            <p>To log out of your account, click the "Logout" link at the top of the page. This will end your current session and return you to the login screen.</p>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="{{ url_for('dashboard') }}">Return to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -36,8 +36,8 @@ app=Flask(__name__)
 app.secret_key="__privatekey__"
 
 #Defines the Hugging Face model that will be used (TinyLlama in this case)
-os.environ['HF_TOKEN'] = "your-token"
-login(token="your-token-again")
+os.environ['HF_TOKEN'] = "your_token"
+login(token="your_token")
 
 
 #Change this to use a different model
@@ -131,7 +131,9 @@ def Taski(task, query):
 #End of Taski function
 
 
-
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
 
 #The Home Page is located as the root of the web page
 @app.route('/')

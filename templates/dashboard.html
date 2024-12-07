@@ -163,7 +163,7 @@
     
         .task-item a {
             font-size: 0.9rem;
-            color: white;
+            color: blue;
             text-decoration: none;
             margin: 0 5px;
         }
@@ -219,6 +219,7 @@
         <section class="dashboard-section">
             <p><strong>Welcome, {{ name }}!</strong></p>
             <h4><a href="{{ url_for('Home') }}"><strong>Logout</strong></a></h4>
+            <h4><a href="{{ url_for('faq') }}"><strong>FAQ Page</strong></a></h4>
         </section>
 
         <form method="POST" action="{{ url_for('dashboard') }}" class="form-container">
@@ -270,16 +271,20 @@
             <td>{{ task[5] }}</td>
             <td>{% if task[6] == 'true' %}✓{% else %}Incomplete{% endif %}</td>
             <td>
+                
                 <a href="{{ url_for('update_task', task_id=task[0]) }}" class="task-item">Edit</a> |
                 <a href="{{ url_for('delete_task', task_id=task[0]) }}" class="task-item" onclick="return confirmDeleteTask()">Delete</a> |
-                <a href="javascript:void(0);" class="task-item" onclick="toggleAIChatPanel(this)" data-task='{{ task | tojson }}'>Ask Taski</a>
+                <a href="javascript:void(0);" class="task-item" onclick="toggleAIChatPanel(this)" data-task='{{ task | tojson }}'>Ask AI</a>
+
                 {% if task[6] == 'false' %}
                 <form method="POST" action="{{ url_for('dashboard') }}" class="complete-task-form" style="display:inline;">
                     <button type="submit" name="complete_task" value="{{ task[0] }}">Mark as Complete</button>
                 </form>
                 {% endif %}
             </td>
+            
         </tr>
+        
         {% endfor %}
     </tbody>
 </table>
