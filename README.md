@@ -1,13 +1,13 @@
 # Contributors: Israel Showell, Byronous Robinson, Christopher Turnbull, Jerome Foster, Kaleigha Hayes, Steker Jean Francois
 # Start Date: 9/27/2024
-# End Date: /2024
+# End Date: 12/7/2024
 # Project: Prioitask - Task Management
-# Version: 0.95
+# Version: 1.00
 
 # Description:
 This repository is for our senior design project from UMES, given to us in the Fall of 2024.
 This web application allows users to create, log into, and manage an account, add tasks to their dashboard and run common functionalities on the tasks, and mark them complete!
-The programming for this project was begun September 27th 2024 and was finished at ==!
+The programming for this project was begun September 27th 2024 and was finished on December 7th 2024!
 
 # Skills Practiced:
 - Web Application Development
@@ -31,7 +31,7 @@ In order to run this program follow the steps below;
 
  - Byronous Mario Fritz-Gerald Robinson II; Front-End Developer, Documentation, Tester, Diagram Designer
 
- Christopher Turnbull, Kaleigha Hayes, Jerome Foster, Steker Jean Francois; Front-End Developer,  Documentation, Tester
+ - Christopher Turnbull, Kaleigha Hayes, Jerome Foster, Steker Jean Francois; Front-End Developer, Documentation, Tester
 
 
 
