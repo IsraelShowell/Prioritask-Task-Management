@@ -2,7 +2,7 @@
 # Start Date: 9/27/2024
 # End Date: 12/7/2024
 # Project: Prioritask - Task Management
-# Version: 1.00
+# Version: 1.01
 
 # Description:
 This repository is for our senior design project from UMES, given to us in the Fall of 2024.
@@ -116,6 +116,9 @@ In order to run this program follow the steps below;
 - Users can create accounts and reset their password
 - Users can create, edit, delete, sort, search, and filter tasks
 - Users can ask for helpful information about their tasks via our AI-powered chatbot
+
+# Current Features as of V-1.01:
+- Fixed some spelling errors 
 
 # Future Features to Implement:
 - Task managemnt functions such as adding, editing, deleting, etc - Done!

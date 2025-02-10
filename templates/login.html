@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prioitask | Login & Sign Up</title>
+    <title>Prioritask | Login & Sign Up</title>
     
     <!-- Internal CSS Styles -->
     <style>
@@ -95,7 +95,7 @@
     <div class="container">
         <!-- Login Section -->
         <section class="login-section">
-            <h1>Welcome to Prioitask!</h1>
+            <h1>Welcome to Prioritask!</h1>
             <form class="login-form" action="{{ url_for('login') }}" method="POST">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="Username" required>
@@ -109,7 +109,7 @@
             <!-- Additional Links -->
             <div class="form-links">
                 <p><a href="{{ url_for('reset_password') }}">Forgot Password?</a></p>
-                <p>New to Prioitask? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+                <p>New to Prioritask? <a href="{{ url_for('signup') }}">Sign Up</a></p>
                 <p><a href="{{ url_for('Home') }}">Go Home</a></p>
             </div>
         </section>

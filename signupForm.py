@@ -1,8 +1,8 @@
 # Creator: Israel Showell
 # Start Date: 9/27/2024
-# End Date: /2024
+# End Date: 12/7/2024
 # Project: Prioitask - Task Management Application
-# Version: 0.95
+# Version: 1.01
 
 # Description:
 """
