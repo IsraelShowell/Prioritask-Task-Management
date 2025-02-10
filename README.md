@@ -1,7 +1,7 @@
 # Contributors: Israel Showell, Byronous Robinson, Christopher Turnbull, Jerome Foster, Kaleigha Hayes, Steker Jean Francois
 # Start Date: 9/27/2024
 # End Date: 12/7/2024
-# Project: Prioitask - Task Management
+# Project: Prioritask - Task Management
 # Version: 1.00
 
 # Description:
